@@ -41,3 +41,16 @@ body {
     border-radius: 4px;
     cursor: pointer;
 }
+
+/* ---- DISPLAY ---- */
+.display-area {
+    background-color: #2b2b2b;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-size: 1.2rem;
+    overflow: hidden;
+    border-bottom: 1px solid #333;
+}
