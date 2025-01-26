@@ -54,3 +54,62 @@ body {
     overflow: hidden;
     border-bottom: 1px solid #333;
 }
+
+/* ---- PANELS (Advanced, Basic, Keyboard) ---- */
+.panel {
+    display: none;
+    /* all panels hidden by default */
+    padding: 16px;
+  }
+
+  /* Show only the active panel */
+  .panel.active {
+    display: block;
+  }
+
+  /* ---- KEYPADS ---- */
+  .keypad {
+    display: grid;
+    grid-gap: 10px;
+  }
+
+  /* ADVANCED KEYPAD */
+  .advanced-keypad {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  /* BASIC KEYPAD */
+  .basic-keypad {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  /* ---- BUTTONS ---- */
+  button,
+  select {
+    outline: none;
+    border: none;
+  }
+
+  button {
+    background-color: #4d4d4d;
+    color: #fff;
+    font-size: 1rem;
+    border-radius: 4px;
+    padding: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background-color: #5c5c5c;
+  }
+
+  /* Special highlight for operator or action buttons */
+  .btn-orange {
+    background-color: #e37f1f;
+  }
+
+  .btn-orange:hover {
+    background-color: #ff8c1a;
+  }
+
