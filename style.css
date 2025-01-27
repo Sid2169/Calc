@@ -7,9 +7,14 @@
 }
 
 body {
-    background-color: #1e1e1e;
+    background-color: #2c2c2c;
     color: #fff;
     min-height: 100vh;
+}
+
+.main-container {
+  display: flex;
+  justify-content: center;
 }
 
 /* ---- CONTAINER ---- */
@@ -27,7 +32,7 @@ body {
 .header {
     display: flex;
     justify-content: space-between;
-    background-color: #333;
+    background-color: #2c2c2c;
     padding: 8px 16px;
     margin-bottom: 12px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
@@ -48,11 +53,11 @@ body {
     cursor: pointer;
 }
 
-.header-item {
+.tool-tip {
   position: relative;
 }
 
-.header-item::after {
+.tool-tip::after {
   content: attr(data-tooltip);
   visibility: hidden;
   width: 120px;
@@ -63,29 +68,17 @@ body {
   padding: 5px;
   position: absolute;
   z-index: 1;
-  top: 125%; /* Position below the .header-item element */
   left: 50%;
   margin-left: -60px; /* Center the tooltip */
   opacity: 0;
   transition: opacity 0.3s;
 }
 
-.header-item::before {
-  content: "";
-  visibility: hidden;
-  position: absolute;
-  top: 100%; /* At the bottom of the tooltip */
-  left: 50%;
-  margin-left: -5px;
-  border-width: 5px;
-  border-style: solid;
-  border-color: transparent transparent black transparent;
-  opacity: 0;
-  transition: opacity 0.3s;
+.tip-below::after {
+  top: 125%;
 }
 
-.header-item:hover::after,
-.header-item:hover::before {
+.tool-tip:hover::after {
   visibility: visible;
   opacity: 1;
 }
