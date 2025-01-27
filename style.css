@@ -9,8 +9,6 @@
 body {
     background-color: #1e1e1e;
     color: #fff;
-    display: flex;
-    justify-content: center;
     min-height: 100vh;
 }
 
@@ -25,12 +23,20 @@ body {
     flex-direction: column;
 }
 
-/* ---- HEADER / MODE SELECTOR ---- */
+/* ---- HEADER ---- */
 .header {
     display: flex;
-    justify-content: flex-end;
-    padding: 8px;
+    justify-content: space-between;
     background-color: #333;
+    padding: 8px 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+#undo {
+    background-image: url(image/undo-button-image.png);
+    background-size: cover;
+    width: 32px;
 }
 
 .header select {
@@ -40,6 +46,48 @@ body {
     padding: 6px 12px;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.header-item {
+  position: relative;
+}
+
+.header-item::after {
+  content: attr(data-tooltip);
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  top: 125%; /* Position below the .header-item element */
+  left: 50%;
+  margin-left: -60px; /* Center the tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.header-item::before {
+  content: "";
+  visibility: hidden;
+  position: absolute;
+  top: 100%; /* At the bottom of the tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent black transparent;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.header-item:hover::after,
+.header-item:hover::before {
+  visibility: visible;
+  opacity: 1;
 }
 
 /* ---- DISPLAY ---- */
@@ -53,6 +101,7 @@ body {
     font-size: 1.2rem;
     overflow: hidden;
     border-bottom: 1px solid #333;
+    
 }
 
 /* ---- PANELS (Advanced, Basic, Keyboard) ---- */
