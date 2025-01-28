@@ -198,19 +198,26 @@ body {
 
   /* ---- KEYPADS ---- */
   .keypad {
-    display: grid;
-    grid-gap: 10px;
+    /* display: grid;
+    grid-gap: 10px; */
   }
 
   /* ADVANCED KEYPAD */
   .advanced-keypad {
-    grid-template-columns: repeat(6, 1fr);
+    display: flex;
+    gap: 0.9em;
+    justify-content: space-between;
   }
 
-  /* BASIC KEYPAD */
-  .basic-keypad {
-    grid-template-columns: repeat(4, 1fr);
+  .basic-buttons,
+  .advanced-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.3em;
+    flex-grow: 1;
+    flex-shrink: 1;
   }
+
 
   /* ---- BUTTONS ---- */
   button,
@@ -220,29 +227,40 @@ body {
   }
 
   button {
-    background-color: #4d4d4d;
+    background-color: #424242;
     color: #fff;
-    font-size: 1rem;
+    font-size: 0.9rem;
     border-radius: 4px;
     padding: 12px;
     cursor: pointer;
     transition: 0.2s;
+    display: block;
   }
 
   button:hover {
-    background-color: #5c5c5c;
+    background-color: #4a4a4a;
   }
 
   /* Special highlight for operator or action buttons */
+  .btn-grey {
+    background-color: #565656;
+  }
+  .btn-grey:hover {
+    background-color: #5f5f5f;
+  }
+  
   .btn-orange {
-    background-color: #e37f1f;
+    background-color: #fe541c;
+    grid-row: 4 / 6;
+    grid-column: 5;
   }
 
   .btn-orange:hover {
-    background-color: #ff8c1a;
+    background-color: #ed744a;
   }
 
   .converter-hidden {
     display: none;
   }
+
 
