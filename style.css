@@ -1,16 +1,16 @@
 /* ---- RESET ---- */
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-    /* outline: 1px solid #fff; */
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  /* outline: 1px solid #fff; */
 }
 
 body {
-    background-color: #2c2c2c;
-    color: #fff;
-    min-height: 100vh;
+  background-color: #2c2c2c;
+  color: #fff;
+  min-height: 100vh;
 }
 
 .main-container {
@@ -20,37 +20,39 @@ body {
 
 /* ---- CONTAINER ---- */
 .container {
-    width: 640px;
-    background-color: #2b2b2b;
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+  width: 640px;
+  background-color: #2b2b2b;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 90vh;
+  margin: 5px;
 }
 
 /* ---- HEADER ---- */
 .header {
-    display: flex;
-    justify-content: space-between;
-    background-color: #2c2c2c;
-    padding: 8px 16px;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: space-between;
+  background-color: #2c2c2c;
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 #undo {
-    background-image: url(image/undo-button-image.png);
-    background-size: cover;
-    width: 32px;
+  background-image: url(image/undo-button-image.png);
+  background-size: cover;
+  width: 32px;
 }
 
 .header select {
-    background-color: #444;
-    color: #fff;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .tool-tip {
@@ -70,14 +72,16 @@ body {
   position: absolute;
   z-index: 1;
   left: 50%;
-  margin-left: -60px; /* Center the tooltip */
+  margin-left: -60px;
+  /* Center the tooltip */
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 1s;
 }
 
 .tip-below::after {
   top: 125%;
 }
+
 .tip-above::after {
   bottom: 125%;
 }
@@ -89,20 +93,23 @@ body {
 
 /* ---- DISPLAY ---- */
 .display-area {
-    background-color: #474747;
-    height: 350px;
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
-    font-size: 1.2rem;
-    overflow: hidden;
-    border-bottom: 1px solid #333;
-    border-radius: 12px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  background-color: #474747;
+  height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  font-size: 1.2rem;
+  overflow: hidden;
+  border-bottom: 1px solid #333;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  margin-bottom: 4px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 0;
 
-
-    
 }
+
 #displayText {
   width: 100%;
   padding: 4px 8px 28px;
@@ -129,6 +136,7 @@ body {
   width: 100%;
   font-size: 0.7rem;
 }
+
 #quantitySelector:hover {
   background-color: #4a4a4a;
 }
@@ -153,6 +161,7 @@ body {
   cursor: pointer;
   font-size: 0.7rem;
 }
+
 .converter-container select:hover {
   background-color: #4a4a4a;
 }
@@ -171,6 +180,7 @@ body {
   background-size: contain;
 
 }
+
 .switch-btn:hover {
   background-color: #3e3e3e;
 }
@@ -186,81 +196,84 @@ body {
 }
 
 .panel {
-    display: none;
-    /* all panels hidden by default */
-    padding: 5px 0;
-  }
+  display: none;
+  /* all panels hidden by default */
+  padding: 5px 0;
+}
 
-  /* Show only the active panel */
-  .panel.active {
-    display: block;
-  }
+/* Show only the active panel */
+.panel.active {
+  display: block;
+}
 
-  /* ---- KEYPADS ---- */
-  .keypad {
-    /* display: grid;
+/* ---- KEYPADS ---- */
+.keypad {
+  /* display: grid;
     grid-gap: 10px; */
-  }
+}
 
-  /* ADVANCED KEYPAD */
-  .advanced-keypad {
-    display: flex;
-    gap: 0.9em;
-    justify-content: space-between;
-  }
+/* ADVANCED KEYPAD */
+.advanced-keypad {
+  display: flex;
+  gap: 0.9em;
+  justify-content: space-between;
+}
 
-  .basic-buttons,
-  .advanced-buttons {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0.3em;
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-
-
-  /* ---- BUTTONS ---- */
-  button,
-  select {
-    outline: none;
-    border: none;
-  }
-
-  button {
-    background-color: #424242;
-    color: #fff;
-    font-size: 0.9rem;
-    border-radius: 4px;
-    padding: 12px;
-    cursor: pointer;
-    transition: 0.2s;
-    display: block;
-  }
-
-  button:hover {
-    background-color: #4a4a4a;
-  }
-
-  /* Special highlight for operator or action buttons */
-  .btn-grey {
-    background-color: #565656;
-  }
-  .btn-grey:hover {
-    background-color: #5f5f5f;
-  }
-  
-  .btn-orange {
-    background-color: #fe541c;
-    grid-row: 4 / 6;
-    grid-column: 5;
-  }
-
-  .btn-orange:hover {
-    background-color: #ed744a;
-  }
-
-  .converter-hidden {
-    display: none;
-  }
+.basic-buttons,
+.advanced-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.25em;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
 
 
+/* ---- BUTTONS ---- */
+button,
+select {
+  outline: none;
+  border: none;
+}
+
+button {
+  background-color: #424242;
+  color: #fff;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  padding: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+  display: block;
+}
+
+button:hover {
+  background-color: #4a4a4a;
+}
+
+/* Special highlight for operator or action buttons */
+.btn-grey {
+  background-color: #565656;
+}
+
+.btn-grey:hover {
+  background-color: #5f5f5f;
+}
+
+.btn-orange {
+  background-color: #fe541c;
+  grid-row: 4 / 6;
+  grid-column: 5;
+}
+
+.btn-orange:hover {
+  background-color: #ed744a;
+}
+
+.converter-hidden {
+  display: none;
+}
+
+.panel-hidden {
+  display: none;
+}
