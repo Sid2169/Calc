@@ -30,8 +30,6 @@ const basicButtons = document.querySelector(".basic-buttons")
 modeSelector.addEventListener('change', () => {
     // Get the selected value
     const selectedValue = modeSelector.value;
-
-    // Call the corresponding function based on the selected value
     switch (selectedValue) {
         case 'advanced':
             advancedButtons.classList.remove("panel-hidden");
@@ -48,3 +46,17 @@ modeSelector.addEventListener('change', () => {
     }
 });
 
+/** ----- CONVERSTION MODE SELECTOR ------ */
+let currentQuantity = document.querySelector(".angle");
+const conversionSelector = document.querySelector("#quantitySelector");
+const quantitySet = document.querySelectorAll(".converter-container")
+conversionSelector.addEventListener('change', () => {
+    
+    currentQuantity.classList.add("converter-hidden");
+    const quantity = conversionSelector.value;
+    quantitySet.forEach(element => {
+        if (element.classList.contains(quantity)) currentQuantity = element;
+    })
+    currentQuantity.classList.remove("converter-hidden")
+
+})
