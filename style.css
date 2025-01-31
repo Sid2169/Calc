@@ -149,6 +149,7 @@ body {
   border-radius: 6px;
   gap: 16px;
   margin-bottom: 12px;
+  flex-wrap: wrap;
 }
 
 .converter-container select {

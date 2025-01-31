@@ -648,6 +648,9 @@ const conversionTable = {
             parsec: 3.24078e-19,
         },
         millimeter: {
+            meter: 0.001,
+            kilometer: 0.000001,
+            centimeter:0.1,
             millimeter: 1,
             micrometer: 1000,
             nanometer: 1e6,
@@ -660,6 +663,9 @@ const conversionTable = {
             lightyear: 1.057e-18,
         },
         micrometer: {
+            meter: 1e-6,
+            kilometer: 1e-9,
+            centimeter: 1e-4,
             millimeter: 0.001,
             micrometer: 1,
             nanometer: 1000,
@@ -672,6 +678,9 @@ const conversionTable = {
             lightyear: 1.057e-21,
         },
         nanometer: {
+            meter: 1e-9,
+            kilometer: 1e-12,
+            centimeter: 1e-7,
             millimeter: 1e-6,
             micrometer: 0.001,
             nanometer: 1,
@@ -682,8 +691,11 @@ const conversionTable = {
             astronomicalUnit: 6.68459e-16,
             parsec: 3.24078e-19,
             lightyear: 1.057e-24,
-        },
+        },        
         mile: {
+            meter: 1609.34,
+            kilometer: 1.60934,
+            centimeter: 160934,
             millimeter: 1609340,
             micrometer: 1.60934e+9,
             nanometer: 1.60934e+12,
@@ -696,6 +708,9 @@ const conversionTable = {
             lightyear: 1.7011e-12,
         },
         yard: {
+            meter: 0.9144,
+            kilometer: 0.0009144,
+            centimeter: 91.44,
             millimeter: 914.4,
             micrometer: 9.144e+5,
             nanometer: 9.144e+8,
@@ -708,6 +723,9 @@ const conversionTable = {
             lightyear: 6.2137e-13,
         },
         foot: {
+            meter: 0.3048,
+            kilometer: 0.0003048,
+            centimeter: 30.48,
             millimeter: 304.8,
             micrometer: 3.048e+5,
             nanometer: 3.048e+8,
@@ -720,6 +738,9 @@ const conversionTable = {
             lightyear: 3.28084e-13,
         },
         inch: {
+            meter: 0.0254,
+            kilometer: 0.0000254,
+            centimeter: 2.54,
             millimeter: 25.4,
             micrometer: 25400,
             nanometer: 2.54e+7,
@@ -732,6 +753,9 @@ const conversionTable = {
             lightyear: 2.3622e-14,
         },
         astronomicalUnit: {
+            meter: 1.496e+11,
+            kilometer: 1.496e+8,
+            centimeter: 1.496e+13,
             millimeter: 1.496e+12,
             micrometer: 1.496e+15,
             nanometer: 1.496e+18,
@@ -741,9 +765,12 @@ const conversionTable = {
             inch: 1.577e+13,
             astronomicalUnit: 1,
             parsec: 4.84814e-5,
-            lightyear: 0.0000000001577,
+            lightyear: 1.58125e-5,
         },
         parsec: {
+            meter: 3.086e+16,
+            kilometer: 3.086e+13,
+            centimeter: 3.086e+18,
             millimeter: 3.086e+19,
             micrometer: 3.086e+22,
             nanometer: 3.086e+25,
@@ -756,6 +783,9 @@ const conversionTable = {
             lightyear: 3.262e+16,
         },
         lightyear: {
+            meter: 9.461e+15,
+            kilometer: 9.461e+12,
+            centimeter: 9.461e+17,
             millimeter: 9.461e+18,
             micrometer: 9.461e+21,
             nanometer: 9.461e+24,
@@ -1198,6 +1228,8 @@ const conversionTable = {
             pint: 211.337,
             cup: 4226.75,
             fluidOunce: 33814,
+            cubicCentimeter: 1e6, // 1 cubic meter = 1,000,000 cubic centimeters
+            cubicMillimeter: 1e9  // 1 cubic meter = 1,000,000,000 cubic millimeters
         },
         liter: {
             cubicMeter: 0.001,
@@ -1212,6 +1244,8 @@ const conversionTable = {
             pint: 2.11337,
             cup: 4.22675,
             fluidOunce: 33.814,
+            cubicCentimeter: 1000,
+            cubicMillimeter: 1e6,
         },
         milliliter: {
             cubicMeter: 1e-6,
@@ -1226,6 +1260,7 @@ const conversionTable = {
             pint: 0.00211337,
             cup: 0.00422675,
             fluidOunce: 0.033814,
+            cubicCentimeter: 1,cubicMillimeter: 1000,
         },
         cubicKilometer: {
             cubicMeter: 1e9,
@@ -1240,6 +1275,8 @@ const conversionTable = {
             pint: 2113376420,
             cup: 4226752840,
             fluidOunce: 33814000000,
+            cubicCentimeter: 1e15,cubicMillimeter: 1e18,
+
         },
         cubicFoot: {
             cubicMeter: 0.0283168,
@@ -1254,6 +1291,8 @@ const conversionTable = {
             pint: 59.8442,
             cup: 113.653,
             fluidOunce: 957.506,
+            cubicCentimeter: 28316.8,cubicMillimeter: 28316800,
+
         },
         cubicInch: {
             cubicMeter: 0.0000163871,
@@ -1268,6 +1307,8 @@ const conversionTable = {
             pint: 0.034632,
             cup: 0.067628,
             fluidOunce: 0.554113,
+            cubicCentimeter: 16.3871,cubicMillimeter: 16387.1,
+
         },
         cubicYard: {
             cubicMeter: 0.764555,
@@ -1282,6 +1323,8 @@ const conversionTable = {
             pint: 1615.79,
             cup: 32295.7,
             fluidOunce: 268435,
+            cubicCentimeter: 764554.85798,cubicMillimeter: 764554857.98,
+
         },
         gallon: {
             cubicMeter: 0.00378541,
@@ -1296,6 +1339,8 @@ const conversionTable = {
             pint: 8,
             cup: 16,
             fluidOunce: 128,
+            cubicCentimeter: 3785.41,cubicMillimeter: 3785410,
+
         },
         quart: {
             cubicMeter: 0.000946353,
@@ -1310,6 +1355,8 @@ const conversionTable = {
             pint: 2,
             cup: 4,
             fluidOunce: 32,
+            cubicCentimeter: 946.353,cubicMillimeter: 946353,
+
         },
         pint: {
             cubicMeter: 0.000473176,
@@ -1324,6 +1371,8 @@ const conversionTable = {
             pint: 1,
             cup: 2,
             fluidOunce: 16,
+            cubicCentimeter: 473.176,cubicMillimeter: 473176,
+
         },
         cup: {
             cubicMeter: 0.000236588,
@@ -1338,6 +1387,7 @@ const conversionTable = {
             pint: 0.5,
             cup: 1,
             fluidOunce: 8,
+            cubicCentimeter: 236.588,cubicMillimeter: 236588,
         },
         fluidOunce: {
             cubicMeter: 0.0000295735,
@@ -1352,80 +1402,121 @@ const conversionTable = {
             pint: 0.0625,
             cup: 0.125,
             fluidOunce: 1,
+            cubicCentimeter: 29.5735,cubicMillimeter: 29573.5,
         },
+        cubicCentimeter: {
+            cubicMeter: 1e-6,
+            liter: 0.001,
+            milliliter: 1,
+            cubicKilometer: 1e-15,
+            cubicFoot: 0.0000353147,
+            cubicInch: 0.0610237,
+            cubicYard: 0.00000130795,
+            gallon: 0.000264172,
+            quart: 0.00105669,
+            pint: 0.00211337,
+            cup: 0.00422675,
+            fluidOunce: 0.033814,
+            cubicCentimeter: 1,
+            cubicMillimeter: 1000,
+        },
+        cubicMillimeter: {
+            cubicMeter: 1e-9,
+            liter: 1e-6,
+            milliliter: 0.001,
+            cubicKilometer: 1e-18,
+            cubicFoot: 0.0000000353147,
+            cubicInch: 0.0000610237,
+            cubicYard: 0.00000000130795,
+            gallon: 0.000000264172,
+            quart: 0.00000105669,
+            pint: 0.00000211337,
+            cup: 0.00000422675,
+            fluidOunce: 0.000033814,
+            cubicCentimeter: 0.001,
+            cubicMillimeter: 1,
+        },        
     },
 
 
 };
 // convert function
 function convert(quantityType, baseUnit, targetUnit, value) {
+    //Verify if the value is a number or not
+    value = Number(value);
+    if (isNaN(value)) return;
+    let conversionResult = 0;
+
+
     // Handle currency conversion
     if (quantityType === 'currency') {
-
     }
 
     // Handle temperature conversion
     if (quantityType === 'temperature') {
         if (baseUnit === 'celsius') {
             if (targetUnit === 'fahrenheit') {
-                return conversionTable.temperature.celsiusToFahrenheit(value);
+                conversionResult = conversionTable.temperature.celsiusToFahrenheit(value);
             }
             if (targetUnit === 'kelvin') {
-                return conversionTable.temperature.celsiusToKelvin(value);
+                conversionResult = conversionTable.temperature.celsiusToKelvin(value);
             }
             if (targetUnit === 'rankine') {
-                return conversionTable.temperature.celsiusToRankine(value);
+                conversionResult = conversionTable.temperature.celsiusToRankine(value);
             }
-            else return value;
+            else conversionResult = value;
         }
 
         if (baseUnit === 'fahrenheit') {
             if (targetUnit === 'celsius') {
-                return conversionTable.temperature.fahrenheitToCelsius(value);
+                conversionResult = conversionTable.temperature.fahrenheitToCelsius(value);
             }
             if (targetUnit === 'kelvin') {
-                return conversionTable.temperature.fahrenheitToKelvin(value);
+                conversionResult = conversionTable.temperature.fahrenheitToKelvin(value);
             }
             if (targetUnit === 'rankine') {
-                return conversionTable.temperature.fahrenheitToRankine(value);
+                conversionResult = conversionTable.temperature.fahrenheitToRankine(value);
             }
-            else return value;
+            else conversionResult = value;
         }
 
         if (baseUnit === 'kelvin') {
             if (targetUnit === 'fahrenheit') {
-                return conversionTable.temperature.kelvinToFahrenheit(value);
+                conversionResult = conversionTable.temperature.kelvinToFahrenheit(value);
             }
             if (targetUnit === 'celsius') {
-                return conversionTable.temperature.kelvinToCelsius(value);
+                conversionResult = conversionTable.temperature.kelvinToCelsius(value);
             }
             if (targetUnit === 'rankine') {
-                return conversionTable.temperature.kelvinToRankine(value);
+                conversionResult = conversionTable.temperature.kelvinToRankine(value);
             }
-            else return value;
+            else conversionResult = value;
         }
 
         if (baseUnit === 'rankine') {
             if (targetUnit === 'fahrenheit') {
-                return conversionTable.temperature.rankineToFahrenheit(value);
+                conversionResult = conversionTable.temperature.rankineToFahrenheit(value);
             }
             if (targetUnit === 'kelvin') {
-                return conversionTable.temperature.rankineToKelvin(value);
+                conversionResult = conversionTable.temperature.rankineToKelvin(value);
             }
             if (targetUnit === 'celsius') {
-                return conversionTable.temperature.rankineToCelsius(value);
+                conversionResult = conversionTable.temperature.rankineToCelsius(value);
             }
-            else return value;
+            else conversionResult = value;
         }
     }
 
     // Handle other unit conversions
     if (conversionTable[quantityType] && conversionTable[quantityType][baseUnit] && conversionTable[quantityType][baseUnit][targetUnit]) {
         const conversionFactor = conversionTable[quantityType][baseUnit][targetUnit];
-        return value * conversionFactor;
+        conversionResult = value * conversionFactor;
     } else {
         throw new Error(`Conversion from ${baseUnit} to ${targetUnit} not available in ${quantityType}.`);
     }
+
+    //Show updated result on screen
+    document.querySelector(`.${quantityType} .result`).textContent = `${value} ${baseUnit} = ${conversionResult} ${targetUnit}`
 }
 
 
@@ -1492,21 +1583,46 @@ conversionSelector.addEventListener('change', () => {
     selectedConverter.classList.add("converter-active");
     selectedFromUnit = document.querySelector(".converter-active .from-unit").value;
     selectedToUnit = document.querySelector(".converter-active .to-unit").value;
+
+    convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
 });
 
 //Unit Changing
-const setOfFromUnitSelectors = document.querySelectorAll("from-unit");
+const setOfFromUnitSelectors = document.querySelectorAll(".from-unit");
 setOfFromUnitSelectors.forEach(element => {
     element.addEventListener('change', () => {
-        selectedFromUnit = document.querySelector("converter-active .from-unit").value;
+        selectedFromUnit = document.querySelector(".converter-active .from-unit").value;
+        convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
     });
 });
-const setOfToUnitSelectors = document.querySelectorAll("to-unit");
+const setOfToUnitSelectors = document.querySelectorAll(".to-unit");
 setOfToUnitSelectors.forEach(element => {
     element.addEventListener('change', () => {
-        selectedToUnit = document.querySelector("converter-active .to-unit").value;
+        selectedToUnit = document.querySelector(".converter-active .to-unit").value;
+        convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
     });
 });
+
+const inputText = document.getElementById('displayText');
+inputText.addEventListener('input', () => {
+    convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
+});
+
+const unitSwitchBtns = document.querySelectorAll('.switch-btn');
+unitSwitchBtns.forEach(switchBtn => {
+    switchBtn.addEventListener('click', () => {
+        let temp = selectedFromUnit;
+        document.querySelector(".converter-active .from-unit").value = selectedToUnit;
+        selectedFromUnit = selectedToUnit;
+        
+        document.querySelector(".converter-active .to-unit").value = temp;
+        selectedToUnit = temp;
+        
+        convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
+    })
+})
+
+
 
 
 
