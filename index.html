@@ -53,7 +53,7 @@
                     <option value="frequency">Frequency</option>
                     <option value="temperature">Temperature</option>
                     <option value="energy">Energy</option>
-                    <option value="digital-Storage">Digital Storage</option>
+                    <option value="digitalStorage">Digital Storage</option>
                     <option value="currency">Currency</option>
                 </select>
 
@@ -61,27 +61,27 @@
 
                 <!-- angle -->
                 <div class="converter-container angle converter-active">
-                    <select id="from-unit">
+                    <select class="from-unit">
                         <option value="degree">Degree</option>
                         <option value="radian">Radian</option>
                         <option value="gradian">Gradian</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit">
+                    <select class="to-unit">
                         <option value="degree">Degree</option>
                         <option value="radian">Radian</option>
                         <option value="gradian">Gradian</option>
                     </select>
                     <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
                         id="switch-btn"></button>
-                    <div class="result" id="conversion-result">
+                    <div class="result" id="angle-result">
                         0 degree = 0 degree
                     </div>
                 </div>
 
                 <!-- length -->
                 <div class="converter-container length converter-hidden">
-                    <select id="from-unit-length">
+                    <select class="from-unit">
                         <option value="meter">Meter</option>
                         <option value="kilometer">Kilometer</option>
                         <option value="centimeter">Centimeter</option>
@@ -97,7 +97,7 @@
                         <option value="parsec">Parsec</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit-length">
+                    <select class="to-unit">
                         <option value="meter">Meter</option>
                         <option value="kilometer">Kilometer</option>
                         <option value="centimeter">Centimeter</option>
@@ -121,30 +121,30 @@
 
                 <!-- area -->
                 <div class="converter-container area converter-hidden">
-                    <select id="from-unit-area">
-                        <option value="square-meter">Square Meter (m²)</option>
-                        <option value="square-kilometer">Square Kilometer (km²)</option>
-                        <option value="square-centimeter">Square Centimeter (cm²)</option>
-                        <option value="square-millimeter">Square Millimeter (mm²)</option>
+                    <select class="from-unit">
+                        <option value="squareMeter">Square Meter (m²)</option>
+                        <option value="squareKilometer">Square Kilometer (km²)</option>
+                        <option value="squareCentimeter">Square Centimeter (cm²)</option>
+                        <option value="squareMillimeter">Square Millimeter (mm²)</option>
                         <option value="hectare">Hectare (ha)</option>
                         <option value="acre">Acre</option>
-                        <option value="square-mile">Square Mile (mi²)</option>
-                        <option value="square-yard">Square Yard (yd²)</option>
-                        <option value="square-foot">Square Foot (ft²)</option>
-                        <option value="square-inch">Square Inch (in²)</option>
+                        <option value="squareMile">Square Mile (mi²)</option>
+                        <option value="squareYard">Square Yard (yd²)</option>
+                        <option value="squareFoot">Square Foot (ft²)</option>
+                        <option value="squareInch">Square Inch (in²)</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit-area">
+                    <select class="to-unit">
                         <option value="square-meter">Square Meter (m²)</option>
-                        <option value="square-kilometer">Square Kilometer (km²)</option>
-                        <option value="square-centimeter">Square Centimeter (cm²)</option>
-                        <option value="square-millimeter">Square Millimeter (mm²)</option>
+                        <option value="squareKilometer">Square Kilometer (km²)</option>
+                        <option value="squareCentimeter">Square Centimeter (cm²)</option>
+                        <option value="squareMillimeter">Square Millimeter (mm²)</option>
                         <option value="hectare">Hectare (ha)</option>
                         <option value="acre">Acre</option>
-                        <option value="square-mile">Square Mile (mi²)</option>
-                        <option value="square-yard">Square Yard (yd²)</option>
-                        <option value="square-foot">Square Foot (ft²)</option>
-                        <option value="square-inch">Square Inch (in²)</option>
+                        <option value="squareMile">Square Mile (mi²)</option>
+                        <option value="squareYard">Square Yard (yd²)</option>
+                        <option value="squareFoot">Square Foot (ft²)</option>
+                        <option value="squareInch">Square Inch (in²)</option>
                     </select>
                     <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
                         id="switch-btn-area"></button>
@@ -155,16 +155,16 @@
 
                 <!-- volume -->
                 <div class="converter-container volume converter-hidden">
-                    <select id="from-unit-volume">
-                        <option value="cubic-meter">Cubic Meter (m³)</option>
+                    <select class="from-unit">
+                        <option value="cubicMeter">Cubic Meter (m³)</option>
                         <option value="liter">Liter (L)</option>
                         <option value="milliliter">Milliliter (mL)</option>
-                        <option value="cubic-kilometer">Cubic Kilometer (km³)</option>
-                        <option value="cubic-centimeter">Cubic Centimeter (cm³)</option>
-                        <option value="cubic-millimeter">Cubic Millimeter (mm³)</option>
-                        <option value="cubic-foot">Cubic Foot (ft³)</option>
-                        <option value="cubic-inch">Cubic Inch (in³)</option>
-                        <option value="cubic-yard">Cubic Yard (yd³)</option>
+                        <option value="cubicKilometer">Cubic Kilometer (km³)</option>
+                        <option value="cubicCentimeter">Cubic Centimeter (cm³)</option>
+                        <option value="cubicMillimeter">Cubic Millimeter (mm³)</option>
+                        <option value="cubicFoot">Cubic Foot (ft³)</option>
+                        <option value="cubicInch">Cubic Inch (in³)</option>
+                        <option value="cubicYard">Cubic Yard (yd³)</option>
                         <option value="gallon">Gallon (US)</option>
                         <option value="quart">Quart (US)</option>
                         <option value="pint">Pint (US)</option>
@@ -172,16 +172,16 @@
                         <option value="fluid-ounce">Fluid Ounce (US fl oz)</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit-volume">
-                        <option value="cubic-meter">Cubic Meter (m³)</option>
+                    <select class="to-unit">
+                        <option value="cubicMeter">Cubic Meter (m³)</option>
                         <option value="liter">Liter (L)</option>
                         <option value="milliliter">Milliliter (mL)</option>
-                        <option value="cubic-kilometer">Cubic Kilometer (km³)</option>
-                        <option value="cubic-centimeter">Cubic Centimeter (cm³)</option>
-                        <option value="cubic-millimeter">Cubic Millimeter (mm³)</option>
-                        <option value="cubic-foot">Cubic Foot (ft³)</option>
-                        <option value="cubic-inch">Cubic Inch (in³)</option>
-                        <option value="cubic-yard">Cubic Yard (yd³)</option>
+                        <option value="cubicKilometer">Cubic Kilometer (km³)</option>
+                        <option value="cubicCentimeter">Cubic Centimeter (cm³)</option>
+                        <option value="cubicMillimeter">Cubic Millimeter (mm³)</option>
+                        <option value="cubicFoot">Cubic Foot (ft³)</option>
+                        <option value="cubicInch">Cubic Inch (in³)</option>
+                        <option value="cubicYard">Cubic Yard (yd³)</option>
                         <option value="gallon">Gallon (US)</option>
                         <option value="quart">Quart (US)</option>
                         <option value="pint">Pint (US)</option>
@@ -197,7 +197,7 @@
 
                 <!-- mass -->
                 <div class="converter-container mass converter-hidden">
-                    <select id="from-unit-mass">
+                    <select class="from-unit">
                         <option value="kilogram">Kilogram (kg)</option>
                         <option value="gram">Gram (g)</option>
                         <option value="milligram">Milligram (mg)</option>
@@ -206,13 +206,13 @@
                         <option value="pound">Pound (lb)</option>
                         <option value="ounce">Ounce (oz)</option>
                         <option value="stone">Stone (st)</option>
-                        <option value="short-ton">Short Ton (US)</option>
-                        <option value="long-ton">Long Ton (UK)</option>
+                        <option value="shortTon">Short Ton (US)</option>
+                        <option value="longTon">Long Ton (UK)</option>
                         <option value="carat">Carat (ct)</option>
-                        <option value="atomic-mass-unit">Atomic Mass Unit (amu)</option>
+                        <option value="atomicMassUnit">Atomic Mass Unit (amu)</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit-mass">
+                    <select class="to-unit">
                         <option value="kilogram">Kilogram (kg)</option>
                         <option value="gram">Gram (g)</option>
                         <option value="milligram">Milligram (mg)</option>
@@ -221,10 +221,10 @@
                         <option value="pound">Pound (lb)</option>
                         <option value="ounce">Ounce (oz)</option>
                         <option value="stone">Stone (st)</option>
-                        <option value="short-ton">Short Ton (US)</option>
-                        <option value="long-ton">Long Ton (UK)</option>
+                        <option value="shortTon">Short Ton (US)</option>
+                        <option value="longTon">Long Ton (UK)</option>
                         <option value="carat">Carat (ct)</option>
-                        <option value="atomic-mass-unit">Atomic Mass Unit (amu)</option>
+                        <option value="atomicMassUnit">Atomic Mass Unit (amu)</option>
                     </select>
                     <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
                         id="switch-btn-mass"></button>
@@ -235,24 +235,24 @@
 
                 <!-- Speed -->
                 <div class="converter-container speed converter-hidden">
-                    <select id="from-unit-speed">
-                        <option value="meter-per-second">Meter per Second (m/s)</option>
-                        <option value="kilometer-per-hour">Kilometer per Hour (km/h)</option>
-                        <option value="mile-per-hour">Mile per Hour (mph)</option>
+                    <select class="from-unit">
+                        <option value="meterPerSecond">Meter per Second (m/s)</option>
+                        <option value="kilometerPerSecond">Kilometer per Hour (km/h)</option>
+                        <option value="milePerHour">Mile per Hour (mph)</option>
                         <option value="knot">Knot (kn)</option>
-                        <option value="foot-per-second">Foot per Second (ft/s)</option>
+                        <option value="footPerSecond">Foot per Second (ft/s)</option>
                         <option value="mach">Mach (Mach)</option>
-                        <option value="speed-of-light">Speed of Light (c)</option>
+                        <option value="speedOfLight">Speed of Light (c)</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit-speed">
-                        <option value="meter-per-second">Meter per Second (m/s)</option>
-                        <option value="kilometer-per-hour">Kilometer per Hour (km/h)</option>
-                        <option value="mile-per-hour">Mile per Hour (mph)</option>
+                    <select class="to-unit">
+                        <option value="meterPerSecond">Meter per Second (m/s)</option>
+                        <option value="kilometerPerSecond">Kilometer per Hour (km/h)</option>
+                        <option value="milePerHour">Mile per Hour (mph)</option>
                         <option value="knot">Knot (kn)</option>
-                        <option value="foot-per-second">Foot per Second (ft/s)</option>
+                        <option value="footPerSecond">Foot per Second (ft/s)</option>
                         <option value="mach">Mach (Mach)</option>
-                        <option value="speed-of-light">Speed of Light (c)</option>
+                        <option value="speedOfLight">Speed of Light (c)</option>
                     </select>
                     <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
                         id="switch-btn-speed"></button>
@@ -263,7 +263,7 @@
 
                 <!-- time -->
                 <div class="converter-container time converter-hidden">
-                    <select id="from-unit">
+                    <select class="from-unit">
                         <option value="millennium">Millennium</option>
                         <option value="century">Century</option>
                         <option value="decade">Decade</option>
@@ -278,7 +278,7 @@
                         <option value="microsecond">Microsecond</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit">
+                    <select class="to-unit">
                         <option value="millennium">Millennium</option>
                         <option value="century">Century</option>
                         <option value="decade">Decade</option>
@@ -301,7 +301,7 @@
 
                 <!-- frequency -->
                 <div class="converter-container frequency converter-hidden">
-                    <select id="from-unit">
+                    <select class="from-unit">
                         <option value="terahertz">Terahertz (THz)</option>
                         <option value="gigahertz">Gigahertz (GHz)</option>
                         <option value="megahertz">Megahertz (MHz)</option>
@@ -309,7 +309,7 @@
                         <option value="hertz">Hertz (Hz)</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit">
+                    <select class="to-unit">
                         <option value="terahertz">Terahertz (THz)</option>
                         <option value="gigahertz">Gigahertz (GHz)</option>
                         <option value="megahertz">Megahertz (MHz)</option>
@@ -325,14 +325,14 @@
 
                 <!-- temperature -->
                 <div class="converter-container temperature converter-hidden">
-                    <select id="from-unit">
+                    <select class="from-unit">
                         <option value="celsius">Celsius (°C)</option>
                         <option value="fahrenheit">Fahrenheit (°F)</option>
                         <option value="kelvin">Kelvin (K)</option>
                         <option value="rankine">Rankine (°R)</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit">
+                    <select class="to-unit">
                         <option value="celsius">Celsius (°C)</option>
                         <option value="fahrenheit">Fahrenheit (°F)</option>
                         <option value="kelvin">Kelvin (K)</option>
@@ -347,22 +347,22 @@
 
                 <!-- energy -->
                 <div class="converter-container energy converter-hidden">
-                    <select id="from-unit">
+                    <select class="from-unit">
                         <option value="joule">Joule (J)</option>
                         <option value="btu">BTU (British Thermal Unit)</option>
                         <option value="calorie">Calorie (cal)</option>
                         <option value="ev">Electronvolt (eV)</option>
                         <option value="erg">Erg</option>
-                        <option value="ft-lb">Foot-Pound (ft-lb)</option>
+                        <option value="ftLb">Foot-Pound (ftLb)</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit">
+                    <select class="to-unit">
                         <option value="joule">Joule (J)</option>
                         <option value="btu">BTU (British Thermal Unit)</option>
                         <option value="calorie">Calorie (cal)</option>
                         <option value="ev">Electronvolt (eV)</option>
                         <option value="erg">Erg</option>
-                        <option value="ft-lb">Foot-Pound (ft-lb)</option>
+                        <option value="ftLb">Foot-Pound (ftLb)</option>
                     </select>
                     <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
                         id="switch-btn"></button>
@@ -373,7 +373,7 @@
 
                 <!-- digital storage -->
                 <div class="converter-container digital-storage converter-hidden">
-                    <select id="from-unit">
+                    <select class="from-unit">
                         <option value="bit">Bit (b)</option>
                         <option value="byte">Byte (B)</option>
                         <option value="kilobit">Kilobit (Kb)</option>
@@ -394,7 +394,7 @@
                         <option value="yobibyte">Yobibyte (YiB)</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit">
+                    <select class="to-unit">
                         <option value="bit">Bit (b)</option>
                         <option value="byte">Byte (B)</option>
                         <option value="kilobit">Kilobit (Kb)</option>
@@ -423,7 +423,7 @@
 
                 <!-- currency -->
                 <div class="converter-container currency converter-hidden">
-                    <select id="from-unit">
+                    <select class="from-unit">
                         <option value="inr">Ind Rupee (INR)</option>
                         <option value="usd">US Dollar (USD)</option>
                         <option value="eur">Euro (EUR)</option>
@@ -447,7 +447,7 @@
                         <option value="try">Lira (TRY)</option>
                     </select>
                     <span class="to-label">to</span>
-                    <select id="to-unit">
+                    <select class="to-unit">
                         <option value="inr">Ind Rupee (INR)</option>
                         <option value="usd">US Dollar (USD)</option>
                         <option value="eur">Euro (EUR)</option>
