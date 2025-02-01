@@ -1453,15 +1453,15 @@ function convert(quantityType, baseUnit, targetUnit, value) {
     }
 
     // Handle temperature conversion
-    if (quantityType === 'temperature') {
+    else if (quantityType === 'temperature') {
         if (baseUnit === 'celsius') {
             if (targetUnit === 'fahrenheit') {
                 conversionResult = conversionTable.temperature.celsiusToFahrenheit(value);
             }
-            if (targetUnit === 'kelvin') {
+            else if (targetUnit === 'kelvin') {
                 conversionResult = conversionTable.temperature.celsiusToKelvin(value);
             }
-            if (targetUnit === 'rankine') {
+            else if (targetUnit === 'rankine') {
                 conversionResult = conversionTable.temperature.celsiusToRankine(value);
             }
             else conversionResult = value;
@@ -1471,10 +1471,10 @@ function convert(quantityType, baseUnit, targetUnit, value) {
             if (targetUnit === 'celsius') {
                 conversionResult = conversionTable.temperature.fahrenheitToCelsius(value);
             }
-            if (targetUnit === 'kelvin') {
+            else if (targetUnit === 'kelvin') {
                 conversionResult = conversionTable.temperature.fahrenheitToKelvin(value);
             }
-            if (targetUnit === 'rankine') {
+            else if (targetUnit === 'rankine') {
                 conversionResult = conversionTable.temperature.fahrenheitToRankine(value);
             }
             else conversionResult = value;
@@ -1484,10 +1484,10 @@ function convert(quantityType, baseUnit, targetUnit, value) {
             if (targetUnit === 'fahrenheit') {
                 conversionResult = conversionTable.temperature.kelvinToFahrenheit(value);
             }
-            if (targetUnit === 'celsius') {
+            else if (targetUnit === 'celsius') {
                 conversionResult = conversionTable.temperature.kelvinToCelsius(value);
             }
-            if (targetUnit === 'rankine') {
+            else if (targetUnit === 'rankine') {
                 conversionResult = conversionTable.temperature.kelvinToRankine(value);
             }
             else conversionResult = value;
@@ -1497,23 +1497,25 @@ function convert(quantityType, baseUnit, targetUnit, value) {
             if (targetUnit === 'fahrenheit') {
                 conversionResult = conversionTable.temperature.rankineToFahrenheit(value);
             }
-            if (targetUnit === 'kelvin') {
+            else if (targetUnit === 'kelvin') {
                 conversionResult = conversionTable.temperature.rankineToKelvin(value);
             }
-            if (targetUnit === 'celsius') {
+            else if (targetUnit === 'celsius') {
                 conversionResult = conversionTable.temperature.rankineToCelsius(value);
             }
             else conversionResult = value;
         }
     }
 
-    // Handle other unit conversions
-    if (conversionTable[quantityType] && conversionTable[quantityType][baseUnit] && conversionTable[quantityType][baseUnit][targetUnit]) {
+   else {
+     // Handle other unit conversions
+     if (conversionTable[quantityType] && conversionTable[quantityType][baseUnit] && conversionTable[quantityType][baseUnit][targetUnit]) {
         const conversionFactor = conversionTable[quantityType][baseUnit][targetUnit];
         conversionResult = value * conversionFactor;
     } else {
         throw new Error(`Conversion from ${baseUnit} to ${targetUnit} not available in ${quantityType}.`);
     }
+   }
 
     //Show updated result on screen
     document.querySelector(`.${quantityType} .result`).textContent = `${value} ${baseUnit} = ${conversionResult} ${targetUnit}`
