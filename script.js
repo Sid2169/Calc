@@ -650,7 +650,7 @@ const conversionTable = {
         millimeter: {
             meter: 0.001,
             kilometer: 0.000001,
-            centimeter:0.1,
+            centimeter: 0.1,
             millimeter: 1,
             micrometer: 1000,
             nanometer: 1e6,
@@ -691,7 +691,7 @@ const conversionTable = {
             astronomicalUnit: 6.68459e-16,
             parsec: 3.24078e-19,
             lightyear: 1.057e-24,
-        },        
+        },
         mile: {
             meter: 1609.34,
             kilometer: 1.60934,
@@ -1260,7 +1260,7 @@ const conversionTable = {
             pint: 0.00211337,
             cup: 0.00422675,
             fluidOunce: 0.033814,
-            cubicCentimeter: 1,cubicMillimeter: 1000,
+            cubicCentimeter: 1, cubicMillimeter: 1000,
         },
         cubicKilometer: {
             cubicMeter: 1e9,
@@ -1275,7 +1275,7 @@ const conversionTable = {
             pint: 2113376420,
             cup: 4226752840,
             fluidOunce: 33814000000,
-            cubicCentimeter: 1e15,cubicMillimeter: 1e18,
+            cubicCentimeter: 1e15, cubicMillimeter: 1e18,
 
         },
         cubicFoot: {
@@ -1291,7 +1291,7 @@ const conversionTable = {
             pint: 59.8442,
             cup: 113.653,
             fluidOunce: 957.506,
-            cubicCentimeter: 28316.8,cubicMillimeter: 28316800,
+            cubicCentimeter: 28316.8, cubicMillimeter: 28316800,
 
         },
         cubicInch: {
@@ -1307,7 +1307,7 @@ const conversionTable = {
             pint: 0.034632,
             cup: 0.067628,
             fluidOunce: 0.554113,
-            cubicCentimeter: 16.3871,cubicMillimeter: 16387.1,
+            cubicCentimeter: 16.3871, cubicMillimeter: 16387.1,
 
         },
         cubicYard: {
@@ -1323,7 +1323,7 @@ const conversionTable = {
             pint: 1615.79,
             cup: 32295.7,
             fluidOunce: 268435,
-            cubicCentimeter: 764554.85798,cubicMillimeter: 764554857.98,
+            cubicCentimeter: 764554.85798, cubicMillimeter: 764554857.98,
 
         },
         gallon: {
@@ -1339,7 +1339,7 @@ const conversionTable = {
             pint: 8,
             cup: 16,
             fluidOunce: 128,
-            cubicCentimeter: 3785.41,cubicMillimeter: 3785410,
+            cubicCentimeter: 3785.41, cubicMillimeter: 3785410,
 
         },
         quart: {
@@ -1355,7 +1355,7 @@ const conversionTable = {
             pint: 2,
             cup: 4,
             fluidOunce: 32,
-            cubicCentimeter: 946.353,cubicMillimeter: 946353,
+            cubicCentimeter: 946.353, cubicMillimeter: 946353,
 
         },
         pint: {
@@ -1371,7 +1371,7 @@ const conversionTable = {
             pint: 1,
             cup: 2,
             fluidOunce: 16,
-            cubicCentimeter: 473.176,cubicMillimeter: 473176,
+            cubicCentimeter: 473.176, cubicMillimeter: 473176,
 
         },
         cup: {
@@ -1387,7 +1387,7 @@ const conversionTable = {
             pint: 0.5,
             cup: 1,
             fluidOunce: 8,
-            cubicCentimeter: 236.588,cubicMillimeter: 236588,
+            cubicCentimeter: 236.588, cubicMillimeter: 236588,
         },
         fluidOunce: {
             cubicMeter: 0.0000295735,
@@ -1402,7 +1402,7 @@ const conversionTable = {
             pint: 0.0625,
             cup: 0.125,
             fluidOunce: 1,
-            cubicCentimeter: 29.5735,cubicMillimeter: 29573.5,
+            cubicCentimeter: 29.5735, cubicMillimeter: 29573.5,
         },
         cubicCentimeter: {
             cubicMeter: 1e-6,
@@ -1435,7 +1435,7 @@ const conversionTable = {
             fluidOunce: 0.000033814,
             cubicCentimeter: 0.001,
             cubicMillimeter: 1,
-        },        
+        },
     },
 
 
@@ -1507,15 +1507,15 @@ function convert(quantityType, baseUnit, targetUnit, value) {
         }
     }
 
-   else {
-     // Handle other unit conversions
-     if (conversionTable[quantityType] && conversionTable[quantityType][baseUnit] && conversionTable[quantityType][baseUnit][targetUnit]) {
-        const conversionFactor = conversionTable[quantityType][baseUnit][targetUnit];
-        conversionResult = value * conversionFactor;
-    } else {
-        throw new Error(`Conversion from ${baseUnit} to ${targetUnit} not available in ${quantityType}.`);
+    else {
+        // Handle other unit conversions
+        if (conversionTable[quantityType] && conversionTable[quantityType][baseUnit] && conversionTable[quantityType][baseUnit][targetUnit]) {
+            const conversionFactor = conversionTable[quantityType][baseUnit][targetUnit];
+            conversionResult = value * conversionFactor;
+        } else {
+            throw new Error(`Conversion from ${baseUnit} to ${targetUnit} not available in ${quantityType}.`);
+        }
     }
-   }
 
     //Show updated result on screen
     document.querySelector(`.${quantityType} .result`).textContent = `${value} ${baseUnit} = ${conversionResult} ${targetUnit}`
@@ -1616,16 +1616,20 @@ unitSwitchBtns.forEach(switchBtn => {
         let temp = selectedFromUnit;
         document.querySelector(".converter-active .from-unit").value = selectedToUnit;
         selectedFromUnit = selectedToUnit;
-        
+
         document.querySelector(".converter-active .to-unit").value = temp;
         selectedToUnit = temp;
-        
+
         convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
     })
 })
 
-
-
-
-
-
+document.getElementById('clear-btn').addEventListener('click', () => {
+    inputText.value = "0";
+    // Create and dispatch the input event
+    const event = new Event('input', {
+        bubbles: true,
+        cancelable: true
+    });
+    inputText.dispatchEvent(event);
+});
