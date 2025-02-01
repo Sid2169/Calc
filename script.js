@@ -1,18 +1,20 @@
 import { conversionTable } from "./conversionTable.js";
 
-console.log("🚀Its Working ~ conversionTable:", conversionTable);
+console.log("🚀 Its Working ~ conversionTable:", conversionTable);
+
 /* --------------------- GLOBAL STRINGS --------------------- */
 // displayStr: what the user sees in the input field
 // update displayStr every time input field value is updated
 
 let displayStr = "";
-document.getElementById("displayText").addEventListener("input", () => {
-  displayStr = document.getElementById("displayText").value;
+const displayText = document.getElementById("displayText");
+
+displayText.addEventListener("input", () => {
+  displayStr = displayText.value;
 });
 
 // convert function
-function convert(quantityType, baseUnit, targetUnit, value) {
-  //Verify if the value is a number or not
+async function convert(quantityType, baseUnit, targetUnit, value) {
   value = Number(value);
   if (isNaN(value)) return;
   let conversionResult = 0;
@@ -20,18 +22,14 @@ function convert(quantityType, baseUnit, targetUnit, value) {
   // Handle currency conversion
   if (quantityType === "currency") {
     const apiKey = "YOUR_API_KEY"; // Replace with your actual API key
-    const apiUrl = `https://api.exchangerate-api.com/v4/latest/${baseUnit}`; // Example API endpoint
+    const apiUrl = `https://api.exchangerate-api.com/v4/latest/${baseUnit}`;
 
     try {
-      let data;
-      const response = fetch(apiUrl)
-        .then((r) => r.json())
-        .then((d) => {
-          data = d;
-        });
-      if (data && data.rates && data.rates[targetUnit]) {
-        const conversionRate = data.rates[targetUnit];
-        conversionResult = value * conversionRate;
+      const response = await fetch(apiUrl);
+      const data = await response.json();
+
+      if (data?.rates?.[targetUnit]) {
+        conversionResult = value * data.rates[targetUnit];
       } else {
         throw new Error(
           `Conversion rate not available for ${baseUnit} to ${targetUnit}.`
@@ -39,47 +37,45 @@ function convert(quantityType, baseUnit, targetUnit, value) {
       }
     } catch (error) {
       console.error("Error fetching currency conversion:", error);
-      return; // Exit the function if there's an error
+      return;
     }
   }
 
   // Handle temperature conversion
   else if (quantityType === "temperature") {
     if (baseUnit === "celsius") {
-      if (targetUnit === "fahrenheit") {
-        conversionResult =
-          conversionTable.temperature.celsiusToFahrenheit(value);
-      } else if (targetUnit === "kelvin") {
-        conversionResult = conversionTable.temperature.celsiusToKelvin(value);
-      } else if (targetUnit === "rankine") {
-        conversionResult = conversionTable.temperature.celsiusToRankine(value);
-      } else conversionResult = value;
+      conversionResult =
+        targetUnit === "fahrenheit"
+          ? conversionTable.temperature.celsiusToFahrenheit(value)
+          : targetUnit === "kelvin"
+          ? conversionTable.temperature.celsiusToKelvin(value)
+          : targetUnit === "rankine"
+          ? conversionTable.temperature.celsiusToRankine(value)
+          : value;
+    } else if (baseUnit === "fahrenheit") {
+      conversionResult =
+        targetUnit === "celsius"
+          ? conversionTable.temperature.fahrenheitToCelsius(value)
+          : targetUnit === "kelvin"
+          ? conversionTable.temperature.fahrenheitToKelvin(value)
+          : targetUnit === "rankine"
+          ? conversionTable.temperature.fahrenheitToRankine(value)
+          : value;
     }
+  }
 
-    if (baseUnit === "fahrenheit") {
-      if (targetUnit === "celsius") {
-        conversionResult =
-          conversionTable.temperature.fahrenheitToCelsius(value);
-      } else if (targetUnit === "kelvin") {
-        conversionResult =
-          conversionTable.temperature.fahrenheitToKelvin(value);
-      } else if (targetUnit === "rankine") {
-        conversionResult =
-          conversionTable.temperature.fahrenheitToRankine(value);
-      } else conversionResult = value;
-    }
+  // Handle other unit conversions
+  else if (conversionTable[quantityType]?.[baseUnit]?.[targetUnit]) {
+    conversionResult =
+      value * conversionTable[quantityType][baseUnit][targetUnit];
+  } else {
+    console.error(
+      `Conversion from ${baseUnit} to ${targetUnit} not available in ${quantityType}.`
+    );
+    return;
+  }
 
-    else {
-        // Handle other unit conversions
-        if (conversionTable[quantityType] && conversionTable[quantityType][baseUnit] && conversionTable[quantityType][baseUnit][targetUnit]) {
-            const conversionFactor = conversionTable[quantityType][baseUnit][targetUnit];
-            conversionResult = value * conversionFactor;
-        } else {
-            throw new Error(`Conversion from ${baseUnit} to ${targetUnit} not available in ${quantityType}.`);
-        }
-    }
-
-  //Show updated result on screen
+  // Show updated result on screen
   document.querySelector(
     `.${quantityType} .result`
   ).textContent = `${value} ${baseUnit} = ${conversionResult} ${targetUnit}`;
@@ -87,7 +83,6 @@ function convert(quantityType, baseUnit, targetUnit, value) {
 
 /* 
   -- UNDO BUTTON --
-  Removes the last character from the displayed expression.
 */
 document.getElementById("undo").addEventListener("click", () => {
   displayStr = displayStr.slice(0, -1);
@@ -96,19 +91,13 @@ document.getElementById("undo").addEventListener("click", () => {
 
 /* 
   -- MODE SWITCHING --
-  "advanced": show the advanced keypad, including advanced buttons
-  "basic": show the keypad but hide advanced buttons
-  "keyboard": hide the entire panel (user can type into the display manually)
 */
-// Get the select element and the result display element
 const modeSelector = document.getElementById("modeSelector");
 const advancedButtons = document.querySelector(".advanced-buttons");
 const basicButtons = document.querySelector(".basic-buttons");
-// Add an event listener for the change event
+
 modeSelector.addEventListener("change", () => {
-  // Get the selected value
-  const selectedValue = modeSelector.value;
-  switch (selectedValue) {
+  switch (modeSelector.value) {
     case "advanced":
       advancedButtons.classList.remove("panel-hidden");
       basicButtons.classList.remove("panel-hidden");
@@ -125,72 +114,67 @@ modeSelector.addEventListener("change", () => {
 });
 
 /** ----- CONVERSION MODE SELECTOR ------ */
-
-//Quantity changing
 let selectedConverter = document.querySelector(".angle");
-let selectedFromUnit = document.querySelector(
-  ".converter-active .from-unit"
-).value;
-let selectedToUnit = document.querySelector(".converter-active .to-unit").value;
-const conversionSelector = document.querySelector("#quantitySelector");
-let selectedQuantity = conversionSelector.value;
+const conversionSelector = document.getElementById("quantitySelector");
 const quantityConverterSet = document.querySelectorAll(".converter-container");
+
 conversionSelector.addEventListener("change", () => {
   selectedConverter.classList.add("converter-hidden");
   selectedConverter.classList.remove("converter-active");
-  selectedQuantity = conversionSelector.value;
-  quantityConverterSet.forEach((element) => {
-    if (element.classList.contains(selectedQuantity))
-      selectedConverter = element;
-  });
+
+  selectedConverter = [...quantityConverterSet].find((element) =>
+    element.classList.contains(conversionSelector.value)
+  );
+
   selectedConverter.classList.remove("converter-hidden");
   selectedConverter.classList.add("converter-active");
-  selectedFromUnit = document.querySelector(
-    ".converter-active .from-unit"
-  ).value;
-  selectedToUnit = document.querySelector(".converter-active .to-unit").value;
 
-  convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
+  convert(
+    conversionSelector.value,
+    selectedConverter.querySelector(".from-unit").value,
+    selectedConverter.querySelector(".to-unit").value,
+    displayStr
+  );
 });
 
-//Unit Changing
-const setOfFromUnitSelectors = document.querySelectorAll(".from-unit");
-setOfFromUnitSelectors.forEach((element) => {
+// Unit changing
+document.querySelectorAll(".from-unit, .to-unit").forEach((element) => {
   element.addEventListener("change", () => {
-    selectedFromUnit = document.querySelector(
+    convert(
+      conversionSelector.value,
+      document.querySelector(".converter-active .from-unit").value,
+      document.querySelector(".converter-active .to-unit").value,
+      displayStr
+    );
+  });
+});
+
+// Switch units button
+document.querySelectorAll(".switch-btn").forEach((switchBtn) => {
+  switchBtn.addEventListener("click", () => {
+    const fromUnitElement = document.querySelector(
       ".converter-active .from-unit"
-    ).value;
-    convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
+    );
+    const toUnitElement = document.querySelector(".converter-active .to-unit");
+
+    [fromUnitElement.value, toUnitElement.value] = [
+      toUnitElement.value,
+      fromUnitElement.value,
+    ];
+
+    convert(
+      conversionSelector.value,
+      fromUnitElement.value,
+      toUnitElement.value,
+      displayStr
+    );
   });
 });
-const setOfToUnitSelectors = document.querySelectorAll(".to-unit");
-setOfToUnitSelectors.forEach((element) => {
-  element.addEventListener("change", () => {
-    selectedToUnit = document.querySelector(".converter-active .to-unit").value;
-    convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
-  });
-});
 
-const unitSwitchBtns = document.querySelectorAll('.switch-btn');
-unitSwitchBtns.forEach(switchBtn => {
-    switchBtn.addEventListener('click', () => {
-        let temp = selectedFromUnit;
-        document.querySelector(".converter-active .from-unit").value = selectedToUnit;
-        selectedFromUnit = selectedToUnit;
-
-        document.querySelector(".converter-active .to-unit").value = temp;
-        selectedToUnit = temp;
-
-        convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
-    })
-})
-
-document.getElementById('clear-btn').addEventListener('click', () => {
-    inputText.value = "0";
-    // Create and dispatch the input event
-    const event = new Event('input', {
-        bubbles: true,
-        cancelable: true
-    });
-    inputText.dispatchEvent(event);
+// Clear button
+document.getElementById("clear-btn").addEventListener("click", () => {
+  displayText.value = "0";
+  displayText.dispatchEvent(
+    new Event("input", { bubbles: true, cancelable: true })
+  );
 });
