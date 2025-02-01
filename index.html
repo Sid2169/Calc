@@ -1,553 +1,669 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculator</title>
-    <link rel="stylesheet" href="style.css">
-</head>
+    <link rel="stylesheet" href="style.css" />
+    <!-- Link external js -->
+    <script src="script.js" type="module" async defer></script>
+  </head>
 
-<body>
-
+  <body>
     <!-- Header / mode selector -->
 
     <div class="header">
+      <button id="undo" class="tool-tip tip-below" data-tooltip="Undo"></button>
 
-        <button id="undo" class="tool-tip tip-below" data-tooltip="Undo"></button>
-
-        <select id="modeSelector" class="tool-tip tip-below" data-tooltip="Select Mode">
-            <option value="advanced">Advanced </option>
-            <option value="basic">Basic</option>
-            <option value="keyboard">Keyboard</option>
-        </select>
+      <select
+        id="modeSelector"
+        class="tool-tip tip-below"
+        data-tooltip="Select Mode"
+      >
+        <option value="advanced">Advanced</option>
+        <option value="basic">Basic</option>
+        <option value="keyboard">Keyboard</option>
+      </select>
     </div>
 
     <div class="main-container">
-        <div class="container">
+      <div class="container">
+        <!-- Display Area -->
 
-            <!-- Display Area -->
-
-            <div id="displayArea" class="display-area">
-                <input type="text" id="displayText" placeholder="0">
-            </div>
-
-            <!-- PANELS -->
-
-            <!-- ADVANCED PANEL -->
-
-            <div id="advancedPanel" class="panel-active">
-
-                <!-- CONVERTER -->
-
-                <!-- Conversion quantity selector -->
-
-                <select id="quantitySelector">
-                    <option value="angle">Angle</option>
-                    <option value="length">Length</option>
-                    <option value="area">Area</option>
-                    <option value="volume">Volume</option>
-                    <option value="mass">Mass</option>
-                    <option value="speed">Speed</option>
-                    <option value="time">Duration</option>
-                    <option value="frequency">Frequency</option>
-                    <option value="temperature">Temperature</option>
-                    <option value="energy">Energy</option>
-                    <option value="digitalStorage">Digital Storage</option>
-                    <option value="currency">Currency</option>
-                </select>
-
-                <!-- Unit Conversion area / unit selector  -->
-
-                <!-- angle -->
-                <div class="converter-container angle converter-active">
-                    <select class="from-unit">
-                        <option value="degree">Degree</option>
-                        <option value="radian">Radian</option>
-                        <option value="gradian">Gradian</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="degree">Degree</option>
-                        <option value="radian">Radian</option>
-                        <option value="gradian">Gradian</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn"></button>
-                    <div class="result" id="angle-result">
-                        0 degree = 0 degree
-                    </div>
-                </div>
-
-                <!-- length -->
-                <div class="converter-container length converter-hidden">
-                    <select class="from-unit">
-                        <option value="meter">Meter</option>
-                        <option value="kilometer">Kilometer</option>
-                        <option value="centimeter">Centimeter</option>
-                        <option value="millimeter">Millimeter</option>
-                        <option value="micrometer">Micrometer</option>
-                        <option value="nanometer">Nanometer</option>
-                        <option value="mile">Mile</option>
-                        <option value="yard">Yard</option>
-                        <option value="foot">Foot</option>
-                        <option value="inch">Inch</option>
-                        <option value="lightyear">Light Year</option>
-                        <option value="astronomicalUnit">Astronomical Unit (AU)</option>
-                        <option value="parsec">Parsec</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="meter">Meter</option>
-                        <option value="kilometer">Kilometer</option>
-                        <option value="centimeter">Centimeter</option>
-                        <option value="millimeter">Millimeter</option>
-                        <option value="micrometer">Micrometer</option>
-                        <option value="nanometer">Nanometer</option>
-                        <option value="mile">Mile</option>
-                        <option value="yard">Yard</option>
-                        <option value="foot">Foot</option>
-                        <option value="inch">Inch</option>
-                        <option value="lightyear">Light Year</option>
-                        <option value="astronomicalUnit">Astronomical Unit (AU)</option>
-                        <option value="parsec">Parsec</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn-length"></button>
-                    <div class="result" id="conversion-result-length">
-                        0 meter = 0 meter
-                    </div>
-                </div>
-
-                <!-- area -->
-                <div class="converter-container area converter-hidden">
-                    <select class="from-unit">
-                        <option value="squareMeter">Square Meter (m²)</option>
-                        <option value="squareKilometer">Square Kilometer (km²)</option>
-                        <option value="squareCentimeter">Square Centimeter (cm²)</option>
-                        <option value="squareMillimeter">Square Millimeter (mm²)</option>
-                        <option value="hectare">Hectare (ha)</option>
-                        <option value="acre">Acre</option>
-                        <option value="squareMile">Square Mile (mi²)</option>
-                        <option value="squareYard">Square Yard (yd²)</option>
-                        <option value="squareFoot">Square Foot (ft²)</option>
-                        <option value="squareInch">Square Inch (in²)</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="squareMeter">Square Meter (m²)</option>
-                        <option value="squareKilometer">Square Kilometer (km²)</option>
-                        <option value="squareCentimeter">Square Centimeter (cm²)</option>
-                        <option value="squareMillimeter">Square Millimeter (mm²)</option>
-                        <option value="hectare">Hectare (ha)</option>
-                        <option value="acre">Acre</option>
-                        <option value="squareMile">Square Mile (mi²)</option>
-                        <option value="squareYard">Square Yard (yd²)</option>
-                        <option value="squareFoot">Square Foot (ft²)</option>
-                        <option value="squareInch">Square Inch (in²)</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn-area"></button>
-                    <div class="result" id="conversion-result-area">
-                        0 m² = 0 m²
-                    </div>
-                </div>
-
-                <!-- volume -->
-                <div class="converter-container volume converter-hidden">
-                    <select class="from-unit">
-                        <option value="cubicMeter">Cubic Meter (m³)</option>
-                        <option value="liter">Liter (L)</option>
-                        <option value="milliliter">Milliliter (mL)</option>
-                        <option value="cubicKilometer">Cubic Kilometer (km³)</option>
-                        <option value="cubicCentimeter">Cubic Centimeter (cm³)</option>
-                        <option value="cubicMillimeter">Cubic Millimeter (mm³)</option>
-                        <option value="cubicFoot">Cubic Foot (ft³)</option>
-                        <option value="cubicInch">Cubic Inch (in³)</option>
-                        <option value="cubicYard">Cubic Yard (yd³)</option>
-                        <option value="gallon">Gallon (US)</option>
-                        <option value="quart">Quart (US)</option>
-                        <option value="pint">Pint (US)</option>
-                        <option value="cup">Cup (US)</option>
-                        <option value="fluidOunce">Fluid Ounce (US fl oz)</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="cubicMeter">Cubic Meter (m³)</option>
-                        <option value="liter">Liter (L)</option>
-                        <option value="milliliter">Milliliter (mL)</option>
-                        <option value="cubicKilometer">Cubic Kilometer (km³)</option>
-                        <option value="cubicCentimeter">Cubic Centimeter (cm³)</option>
-                        <option value="cubicMillimeter">Cubic Millimeter (mm³)</option>
-                        <option value="cubicFoot">Cubic Foot (ft³)</option>
-                        <option value="cubicInch">Cubic Inch (in³)</option>
-                        <option value="cubicYard">Cubic Yard (yd³)</option>
-                        <option value="gallon">Gallon (US)</option>
-                        <option value="quart">Quart (US)</option>
-                        <option value="pint">Pint (US)</option>
-                        <option value="cup">Cup (US)</option>
-                        <option value="fluidOunce">Fluid Ounce (US fl oz)</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn-volume"></button>
-                    <div class="result" id="conversion-result-volume">
-                        0 m³ = 0 m³
-                    </div>
-                </div>
-
-                <!-- mass -->
-                <div class="converter-container mass converter-hidden">
-                    <select class="from-unit">
-                        <option value="kilogram">Kilogram (kg)</option>
-                        <option value="gram">Gram (g)</option>
-                        <option value="milligram">Milligram (mg)</option>
-                        <option value="microgram">Microgram (µg)</option>
-                        <option value="tonne">Metric Tonne (t)</option>
-                        <option value="pound">Pound (lb)</option>
-                        <option value="ounce">Ounce (oz)</option>
-                        <option value="stone">Stone (st)</option>
-                        <option value="shortTon">Short Ton (US)</option>
-                        <option value="longTon">Long Ton (UK)</option>
-                        <option value="carat">Carat (ct)</option>
-                        <option value="atomicMassUnit">Atomic Mass Unit (amu)</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="kilogram">Kilogram (kg)</option>
-                        <option value="gram">Gram (g)</option>
-                        <option value="milligram">Milligram (mg)</option>
-                        <option value="microgram">Microgram (µg)</option>
-                        <option value="tonne">Metric Tonne (t)</option>
-                        <option value="pound">Pound (lb)</option>
-                        <option value="ounce">Ounce (oz)</option>
-                        <option value="stone">Stone (st)</option>
-                        <option value="shortTon">Short Ton (US)</option>
-                        <option value="longTon">Long Ton (UK)</option>
-                        <option value="carat">Carat (ct)</option>
-                        <option value="atomicMassUnit">Atomic Mass Unit (amu)</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn-mass"></button>
-                    <div class="result" id="conversion-result-mass">
-                        0 kg = 0 kg
-                    </div>
-                </div>
-
-                <!-- Speed -->
-                <div class="converter-container speed converter-hidden">
-                    <select class="from-unit">
-                        <option value="meterPerSecond">Meter per Second (m/s)</option>
-                        <option value="kilometerPerSecond">Kilometer per Hour (km/h)</option>
-                        <option value="milePerHour">Mile per Hour (mph)</option>
-                        <option value="knot">Knot (kn)</option>
-                        <option value="footPerSecond">Foot per Second (ft/s)</option>
-                        <option value="mach">Mach (Mach)</option>
-                        <option value="speedOfLight">Speed of Light (c)</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="meterPerSecond">Meter per Second (m/s)</option>
-                        <option value="kilometerPerSecond">Kilometer per Hour (km/h)</option>
-                        <option value="milePerHour">Mile per Hour (mph)</option>
-                        <option value="knot">Knot (kn)</option>
-                        <option value="footPerSecond">Foot per Second (ft/s)</option>
-                        <option value="mach">Mach (Mach)</option>
-                        <option value="speedOfLight">Speed of Light (c)</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn-speed"></button>
-                    <div class="result" id="conversion-result-speed">
-                        0 m/s = 0 m/s
-                    </div>
-                </div>
-
-                <!-- time -->
-                <div class="converter-container time converter-hidden">
-                    <select class="from-unit">
-                        <option value="millennium">Millennium</option>
-                        <option value="century">Century</option>
-                        <option value="decade">Decade</option>
-                        <option value="year">Year</option>
-                        <option value="month">Month</option>
-                        <option value="week">Week</option>
-                        <option value="day">Day</option>
-                        <option value="hour">Hour</option>
-                        <option value="minute">Minute</option>
-                        <option value="second">Second</option>
-                        <option value="millisecond">Millisecond</option>
-                        <option value="microsecond">Microsecond</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="millennium">Millennium</option>
-                        <option value="century">Century</option>
-                        <option value="decade">Decade</option>
-                        <option value="year">Year</option>
-                        <option value="month">Month</option>
-                        <option value="week">Week</option>
-                        <option value="day">Day</option>
-                        <option value="hour">Hour</option>
-                        <option value="minute">Minute</option>
-                        <option value="second">Second</option>
-                        <option value="millisecond">Millisecond</option>
-                        <option value="microsecond">Microsecond</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn"></button>
-                    <div class="result" id="conversion-result">
-                        0 millennium = 0 millennium
-                    </div>
-                </div>
-
-                <!-- frequency -->
-                <div class="converter-container frequency converter-hidden">
-                    <select class="from-unit">
-                        <option value="terahertz">Terahertz (THz)</option>
-                        <option value="gigahertz">Gigahertz (GHz)</option>
-                        <option value="megahertz">Megahertz (MHz)</option>
-                        <option value="kilohertz">Kilohertz (kHz)</option>
-                        <option value="hertz">Hertz (Hz)</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="terahertz">Terahertz (THz)</option>
-                        <option value="gigahertz">Gigahertz (GHz)</option>
-                        <option value="megahertz">Megahertz (MHz)</option>
-                        <option value="kilohertz">Kilohertz (kHz)</option>
-                        <option value="hertz">Hertz (Hz)</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn"></button>
-                    <div class="result" id="conversion-result">
-                        0 hertz = 0 hertz
-                    </div>
-                </div>
-
-                <!-- temperature -->
-                <div class="converter-container temperature converter-hidden">
-                    <select class="from-unit">
-                        <option value="celsius">Celsius (°C)</option>
-                        <option value="fahrenheit">Fahrenheit (°F)</option>
-                        <option value="kelvin">Kelvin (K)</option>
-                        <option value="rankine">Rankine (°R)</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="celsius">Celsius (°C)</option>
-                        <option value="fahrenheit">Fahrenheit (°F)</option>
-                        <option value="kelvin">Kelvin (K)</option>
-                        <option value="rankine">Rankine (°R)</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn"></button>
-                    <div class="result" id="conversion-result">
-                        0 °C = 0 °C
-                    </div>
-                </div>
-
-                <!-- energy -->
-                <div class="converter-container energy converter-hidden">
-                    <select class="from-unit">
-                        <option value="joule">Joule (J)</option>
-                        <option value="btu">BTU (British Thermal Unit)</option>
-                        <option value="calorie">Calorie (cal)</option>
-                        <option value="ev">Electronvolt (eV)</option>
-                        <option value="erg">Erg</option>
-                        <option value="ftLb">Foot-Pound (ftLb)</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="joule">Joule (J)</option>
-                        <option value="btu">BTU (British Thermal Unit)</option>
-                        <option value="calorie">Calorie (cal)</option>
-                        <option value="ev">Electronvolt (eV)</option>
-                        <option value="erg">Erg</option>
-                        <option value="ftLb">Foot-Pound (ftLb)</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn"></button>
-                    <div class="result" id="conversion-result">
-                        0 J = 0 J
-                    </div>
-                </div>
-
-                <!-- digital storage -->
-                <div class="converter-container digital-storage converter-hidden">
-                    <select class="from-unit">
-                        <option value="bit">Bit (b)</option>
-                        <option value="byte">Byte (B)</option>
-                        <option value="kilobit">Kilobit (Kb)</option>
-                        <option value="kilobyte">Kilobyte (KB)</option>
-                        <option value="megabit">Megabit (Mb)</option>
-                        <option value="megabyte">Megabyte (MB)</option>
-                        <option value="gigabit">Gigabit (Gb)</option>
-                        <option value="gigabyte">Gigabyte (GB)</option>
-                        <option value="terabit">Terabit (Tb)</option>
-                        <option value="terabyte">Terabyte (TB)</option>
-                        <option value="petabit">Petabit (Pb)</option>
-                        <option value="petabyte">Petabyte (PB)</option>
-                        <option value="exabit">Exabit (Eb)</option>
-                        <option value="exabyte">Exabyte (EB)</option>
-                        <option value="zettabit">Zettabit (Zb)</option>
-                        <option value="zettabyte">Zettabyte (ZB)</option>
-                        <option value="yobibit">Yobibit (Yb)</option>
-                        <option value="yobibyte">Yobibyte (YiB)</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="bit">Bit (b)</option>
-                        <option value="byte">Byte (B)</option>
-                        <option value="kilobit">Kilobit (Kb)</option>
-                        <option value="kilobyte">Kilobyte (KB)</option>
-                        <option value="megabit">Megabit (Mb)</option>
-                        <option value="megabyte">Megabyte (MB)</option>
-                        <option value="gigabit">Gigabit (Gb)</option>
-                        <option value="gigabyte">Gigabyte (GB)</option>
-                        <option value="terabit">Terabit (Tb)</option>
-                        <option value="terabyte">Terabyte (TB)</option>
-                        <option value="petabit">Petabit (Pb)</option>
-                        <option value="petabyte">Petabyte (PB)</option>
-                        <option value="exabit">Exabit (Eb)</option>
-                        <option value="exabyte">Exabyte (EB)</option>
-                        <option value="zettabit">Zettabit (Zb)</option>
-                        <option value="zettabyte">Zettabyte (ZB)</option>
-                        <option value="yobibit">Yobibit (Yb)</option>
-                        <option value="yobibyte">Yobibyte (YiB)</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn"></button>
-                    <div class="result" id="conversion-result">
-                        0 b = 0 b
-                    </div>
-                </div>
-
-                <!-- currency -->
-                <div class="converter-container currency converter-hidden">
-                    <select class="from-unit">
-                        <option value="inr">Ind Rupee (INR)</option>
-                        <option value="usd">US Dollar (USD)</option>
-                        <option value="eur">Euro (EUR)</option>
-                        <option value="jpy">Yen (JPY)</option>
-                        <option value="gbp">Pound (GBP)</option>
-                        <option value="aud">AUS Dollar (AUD)</option>
-                        <option value="cad">CAD Dollar (CAD)</option>
-                        <option value="chf">Franc (CHF)</option>
-                        <option value="cny">Yuan (CNY)</option>
-                        <option value="brl">Real (BRL)</option>
-                        <option value="rub">Ruble (RUB)</option>
-                        <option value="zar">Rand (ZAR)</option>
-                        <option value="sgd">SG Dollar (SGD)</option>
-                        <option value="hkd">HK Dollar (HKD)</option>
-                        <option value="nzd">NZ Dollar (NZD)</option>
-                        <option value="krw">Won (KRW)</option>
-                        <option value="sek">Krona (SEK)</option>
-                        <option value="nok">Krone (NOK)</option>
-                        <option value="dkk">Danish Krone (DKK)</option>
-                        <option value="aed">UAE Dirham (AED)</option>
-                        <option value="try">Lira (TRY)</option>
-                    </select>
-                    <span class="to-label">to</span>
-                    <select class="to-unit">
-                        <option value="inr">Ind Rupee (INR)</option>
-                        <option value="usd">US Dollar (USD)</option>
-                        <option value="eur">Euro (EUR)</option>
-                        <option value="jpy">Yen (JPY)</option>
-                        <option value="gbp">Pound (GBP)</option>
-                        <option value="aud">AUS Dollar (AUD)</option>
-                        <option value="cad">CAD Dollar (CAD)</option>
-                        <option value="chf">Franc (CHF)</option>
-                        <option value="cny">Yuan (CNY)</option>
-                        <option value="brl">Real (BRL)</option>
-                        <option value="rub">Ruble (RUB)</option>
-                        <option value="zar">Rand (ZAR)</option>
-                        <option value="sgd">SG Dollar (SGD)</option>
-                        <option value="hkd">HK Dollar (HKD)</option>
-                        <option value="nzd">NZ Dollar (NZD)</option>
-                        <option value="krw">Won (KRW)</option>
-                        <option value="sek">Krona (SEK)</option>
-                        <option value="nok">Krone (NOK)</option>
-                        <option value="dkk">Danish Krone (DKK)</option>
-                        <option value="aed">UAE Dirham (AED)</option>
-                        <option value="try">Lira (TRY)</option>
-                    </select>
-                    <button class="switch-btn tool-tip tip-below" data-tooltip="Switch Conversion Units"
-                        id="switch-btn"></button>
-                    <div class="result" id="conversion-result">
-                        0 INR = 0 INR
-                    </div>
-                </div>
-
-                <!-- Keypad for advanced options -->
-
-                <div class="keypad advanced-keypad">
-                    <div class="basic-buttons">
-                        <button class="tool-tip tip-below" data-tooltip="Clear Display">C</button>
-                        <button class="tool-tip tip-below" data-tooltip="Start Group">(</button>
-                        <button class="tool-tip tip-below" data-tooltip="End Group">)</button>
-                        <button class="tool-tip tip-below" data-tooltip="Modulus Divide">mod</button>
-                        <button class="tool-tip tip-below" data-tooltip="Pi">π</button>
-
-                        <button class="btn-grey">7</button>
-                        <button class="btn-grey">8</button>
-                        <button class="btn-grey">9</button>
-                        <button class="tool-tip tip-below" data-tooltip="Divide">÷</button>
-                        <button class="tool-tip tip-below" data-tooltip="Square Root">√</button>
-
-                        <button class="btn-grey">4</button>
-                        <button class="btn-grey">5</button>
-                        <button class="btn-grey">6</button>
-                        <button class="tool-tip tip-below" data-tooltip="Multiply">×</button>
-                        <button class="tool-tip tip-below" data-tooltip="Square">x²</button>
-
-                        <button class="btn-grey">1</button>
-                        <button class="btn-grey">2</button>
-                        <button class="btn-grey">3</button>
-                        <button class="tool-tip tip-below" data-tooltip="Subtract">-</button>
-                        <button class="btn-orange tool-tip tip-above" data-tooltip="Calculate Result">=</button>
-
-                        <button class="btn-grey">0</button>
-                        <button>.</button>
-                        <button class="tool-tip tip-above" data-tooltip="Percentage">%</button>
-                        <button class="tool-tip tip-above" data-tooltip="Addition">+</button>
-                    </div>
-
-                    <div class="advanced-buttons">
-                        <button class="tool-tip tip-below" data-tooltip="Subscript Mode">↓n</button>
-                        <button class="tool-tip tip-below" data-tooltip="Superscript Mode">↑n</button>
-                        <button class="tool-tip tip-below" data-tooltip="Cosine">cos</button>
-                        <button class="tool-tip tip-below" data-tooltip="Sine">sin</button>
-                        <button class="tool-tip tip-below" data-tooltip="Tangent">tan</button>
-
-                        <button class="tool-tip tip-below" data-tooltip="Factorize">a×b</button>
-                        <button class="tool-tip tip-below" data-tooltip="Scientific Exponent">×10<sup>ʸ</sup></button>
-                        <button class="tool-tip tip-below" data-tooltip="Hyperbolic Cosine">cosh</button>
-                        <button class="tool-tip tip-below" data-tooltip="Hyperbolic Sine">sinh</button>
-                        <button class="tool-tip tip-below" data-tooltip="Hyperbolic Tangent">tanh</button>
-
-                        <button class="tool-tip tip-below" data-tooltip="Exponent">x<sup>ⁿ</sup></button>
-                        <button class="tool-tip tip-below" data-tooltip="Inverse">x<sup>-1</sup></button>
-                        <button class="tool-tip tip-below" data-tooltip="Euler's Number">e</button>
-                        <button class="tool-tip tip-below" data-tooltip="Natural Logarithm">ln</button>
-                        <button class="tool-tip tip-below" data-tooltip="Logarithm">log</button>
-
-                        <button class="tool-tip tip-below" data-tooltip="Factorial">x!</button>
-                        <button class="tool-tip tip-below" data-tooltip="Absolute Value">|x|</button>
-                        <button class="tool-tip tip-below" data-tooltip="Imaginary Unit">i</button>
-                        <button class="tool-tip tip-below" data-tooltip="Real Component">Re</button>
-                        <button class="tool-tip tip-below" data-tooltip="Imaginary Component">Im</button>
-
-                        <button class="tool-tip tip-above" data-tooltip="Additional Functions">f(x)</button>
-                        <button class="tool-tip tip-above" data-tooltip="Complex Conjugate">conj</button>
-                        <button class="tool-tip tip-above" data-tooltip="Complex Argument">Arg</button>
-                    </div>
-                </div>
-            </div>
+        <div id="displayArea" class="display-area">
+          <input type="text" id="displayText" placeholder="0" />
         </div>
+
+        <!-- PANELS -->
+
+        <!-- ADVANCED PANEL -->
+
+        <div id="advancedPanel" class="panel-active">
+          <!-- CONVERTER -->
+
+          <!-- Conversion quantity selector -->
+
+          <select id="quantitySelector">
+            <option value="angle">Angle</option>
+            <option value="length">Length</option>
+            <option value="area">Area</option>
+            <option value="volume">Volume</option>
+            <option value="mass">Mass</option>
+            <option value="speed">Speed</option>
+            <option value="time">Duration</option>
+            <option value="frequency">Frequency</option>
+            <option value="temperature">Temperature</option>
+            <option value="energy">Energy</option>
+            <option value="digitalStorage">Digital Storage</option>
+            <option value="currency">Currency</option>
+          </select>
+
+          <!-- Unit Conversion area / unit selector  -->
+
+          <!-- angle -->
+          <div class="converter-container angle converter-active">
+            <select class="from-unit">
+              <option value="degree">Degree</option>
+              <option value="radian">Radian</option>
+              <option value="gradian">Gradian</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="degree">Degree</option>
+              <option value="radian">Radian</option>
+              <option value="gradian">Gradian</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn"
+            ></button>
+            <div class="result" id="angle-result">0 degree = 0 degree</div>
+          </div>
+
+          <!-- length -->
+          <div class="converter-container length converter-hidden">
+            <select class="from-unit">
+              <option value="meter">Meter</option>
+              <option value="kilometer">Kilometer</option>
+              <option value="centimeter">Centimeter</option>
+              <option value="millimeter">Millimeter</option>
+              <option value="micrometer">Micrometer</option>
+              <option value="nanometer">Nanometer</option>
+              <option value="mile">Mile</option>
+              <option value="yard">Yard</option>
+              <option value="foot">Foot</option>
+              <option value="inch">Inch</option>
+              <option value="lightyear">Light Year</option>
+              <option value="astronomicalUnit">Astronomical Unit (AU)</option>
+              <option value="parsec">Parsec</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="meter">Meter</option>
+              <option value="kilometer">Kilometer</option>
+              <option value="centimeter">Centimeter</option>
+              <option value="millimeter">Millimeter</option>
+              <option value="micrometer">Micrometer</option>
+              <option value="nanometer">Nanometer</option>
+              <option value="mile">Mile</option>
+              <option value="yard">Yard</option>
+              <option value="foot">Foot</option>
+              <option value="inch">Inch</option>
+              <option value="lightyear">Light Year</option>
+              <option value="astronomicalUnit">Astronomical Unit (AU)</option>
+              <option value="parsec">Parsec</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn-length"
+            ></button>
+            <div class="result" id="conversion-result-length">
+              0 meter = 0 meter
+            </div>
+          </div>
+
+          <!-- area -->
+          <div class="converter-container area converter-hidden">
+            <select class="from-unit">
+              <option value="squareMeter">Square Meter (m²)</option>
+              <option value="squareKilometer">Square Kilometer (km²)</option>
+              <option value="squareCentimeter">Square Centimeter (cm²)</option>
+              <option value="squareMillimeter">Square Millimeter (mm²)</option>
+              <option value="hectare">Hectare (ha)</option>
+              <option value="acre">Acre</option>
+              <option value="squareMile">Square Mile (mi²)</option>
+              <option value="squareYard">Square Yard (yd²)</option>
+              <option value="squareFoot">Square Foot (ft²)</option>
+              <option value="squareInch">Square Inch (in²)</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="squareMeter">Square Meter (m²)</option>
+              <option value="squareKilometer">Square Kilometer (km²)</option>
+              <option value="squareCentimeter">Square Centimeter (cm²)</option>
+              <option value="squareMillimeter">Square Millimeter (mm²)</option>
+              <option value="hectare">Hectare (ha)</option>
+              <option value="acre">Acre</option>
+              <option value="squareMile">Square Mile (mi²)</option>
+              <option value="squareYard">Square Yard (yd²)</option>
+              <option value="squareFoot">Square Foot (ft²)</option>
+              <option value="squareInch">Square Inch (in²)</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn-area"
+            ></button>
+            <div class="result" id="conversion-result-area">0 m² = 0 m²</div>
+          </div>
+
+          <!-- volume -->
+          <div class="converter-container volume converter-hidden">
+            <select class="from-unit">
+              <option value="cubicMeter">Cubic Meter (m³)</option>
+              <option value="liter">Liter (L)</option>
+              <option value="milliliter">Milliliter (mL)</option>
+              <option value="cubicKilometer">Cubic Kilometer (km³)</option>
+              <option value="cubicCentimeter">Cubic Centimeter (cm³)</option>
+              <option value="cubicMillimeter">Cubic Millimeter (mm³)</option>
+              <option value="cubicFoot">Cubic Foot (ft³)</option>
+              <option value="cubicInch">Cubic Inch (in³)</option>
+              <option value="cubicYard">Cubic Yard (yd³)</option>
+              <option value="gallon">Gallon (US)</option>
+              <option value="quart">Quart (US)</option>
+              <option value="pint">Pint (US)</option>
+              <option value="cup">Cup (US)</option>
+              <option value="fluidOunce">Fluid Ounce (US fl oz)</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="cubicMeter">Cubic Meter (m³)</option>
+              <option value="liter">Liter (L)</option>
+              <option value="milliliter">Milliliter (mL)</option>
+              <option value="cubicKilometer">Cubic Kilometer (km³)</option>
+              <option value="cubicCentimeter">Cubic Centimeter (cm³)</option>
+              <option value="cubicMillimeter">Cubic Millimeter (mm³)</option>
+              <option value="cubicFoot">Cubic Foot (ft³)</option>
+              <option value="cubicInch">Cubic Inch (in³)</option>
+              <option value="cubicYard">Cubic Yard (yd³)</option>
+              <option value="gallon">Gallon (US)</option>
+              <option value="quart">Quart (US)</option>
+              <option value="pint">Pint (US)</option>
+              <option value="cup">Cup (US)</option>
+              <option value="fluidOunce">Fluid Ounce (US fl oz)</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn-volume"
+            ></button>
+            <div class="result" id="conversion-result-volume">0 m³ = 0 m³</div>
+          </div>
+
+          <!-- mass -->
+          <div class="converter-container mass converter-hidden">
+            <select class="from-unit">
+              <option value="kilogram">Kilogram (kg)</option>
+              <option value="gram">Gram (g)</option>
+              <option value="milligram">Milligram (mg)</option>
+              <option value="microgram">Microgram (µg)</option>
+              <option value="tonne">Metric Tonne (t)</option>
+              <option value="pound">Pound (lb)</option>
+              <option value="ounce">Ounce (oz)</option>
+              <option value="stone">Stone (st)</option>
+              <option value="shortTon">Short Ton (US)</option>
+              <option value="longTon">Long Ton (UK)</option>
+              <option value="carat">Carat (ct)</option>
+              <option value="atomicMassUnit">Atomic Mass Unit (amu)</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="kilogram">Kilogram (kg)</option>
+              <option value="gram">Gram (g)</option>
+              <option value="milligram">Milligram (mg)</option>
+              <option value="microgram">Microgram (µg)</option>
+              <option value="tonne">Metric Tonne (t)</option>
+              <option value="pound">Pound (lb)</option>
+              <option value="ounce">Ounce (oz)</option>
+              <option value="stone">Stone (st)</option>
+              <option value="shortTon">Short Ton (US)</option>
+              <option value="longTon">Long Ton (UK)</option>
+              <option value="carat">Carat (ct)</option>
+              <option value="atomicMassUnit">Atomic Mass Unit (amu)</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn-mass"
+            ></button>
+            <div class="result" id="conversion-result-mass">0 kg = 0 kg</div>
+          </div>
+
+          <!-- Speed -->
+          <div class="converter-container speed converter-hidden">
+            <select class="from-unit">
+              <option value="meterPerSecond">Meter per Second (m/s)</option>
+              <option value="kilometerPerSecond">
+                Kilometer per Hour (km/h)
+              </option>
+              <option value="milePerHour">Mile per Hour (mph)</option>
+              <option value="knot">Knot (kn)</option>
+              <option value="footPerSecond">Foot per Second (ft/s)</option>
+              <option value="mach">Mach (Mach)</option>
+              <option value="speedOfLight">Speed of Light (c)</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="meterPerSecond">Meter per Second (m/s)</option>
+              <option value="kilometerPerSecond">
+                Kilometer per Hour (km/h)
+              </option>
+              <option value="milePerHour">Mile per Hour (mph)</option>
+              <option value="knot">Knot (kn)</option>
+              <option value="footPerSecond">Foot per Second (ft/s)</option>
+              <option value="mach">Mach (Mach)</option>
+              <option value="speedOfLight">Speed of Light (c)</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn-speed"
+            ></button>
+            <div class="result" id="conversion-result-speed">0 m/s = 0 m/s</div>
+          </div>
+
+          <!-- time -->
+          <div class="converter-container time converter-hidden">
+            <select class="from-unit">
+              <option value="millennium">Millennium</option>
+              <option value="century">Century</option>
+              <option value="decade">Decade</option>
+              <option value="year">Year</option>
+              <option value="month">Month</option>
+              <option value="week">Week</option>
+              <option value="day">Day</option>
+              <option value="hour">Hour</option>
+              <option value="minute">Minute</option>
+              <option value="second">Second</option>
+              <option value="millisecond">Millisecond</option>
+              <option value="microsecond">Microsecond</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="millennium">Millennium</option>
+              <option value="century">Century</option>
+              <option value="decade">Decade</option>
+              <option value="year">Year</option>
+              <option value="month">Month</option>
+              <option value="week">Week</option>
+              <option value="day">Day</option>
+              <option value="hour">Hour</option>
+              <option value="minute">Minute</option>
+              <option value="second">Second</option>
+              <option value="millisecond">Millisecond</option>
+              <option value="microsecond">Microsecond</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn"
+            ></button>
+            <div class="result" id="conversion-result">
+              0 millennium = 0 millennium
+            </div>
+          </div>
+
+          <!-- frequency -->
+          <div class="converter-container frequency converter-hidden">
+            <select class="from-unit">
+              <option value="terahertz">Terahertz (THz)</option>
+              <option value="gigahertz">Gigahertz (GHz)</option>
+              <option value="megahertz">Megahertz (MHz)</option>
+              <option value="kilohertz">Kilohertz (kHz)</option>
+              <option value="hertz">Hertz (Hz)</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="terahertz">Terahertz (THz)</option>
+              <option value="gigahertz">Gigahertz (GHz)</option>
+              <option value="megahertz">Megahertz (MHz)</option>
+              <option value="kilohertz">Kilohertz (kHz)</option>
+              <option value="hertz">Hertz (Hz)</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn"
+            ></button>
+            <div class="result" id="conversion-result">0 hertz = 0 hertz</div>
+          </div>
+
+          <!-- temperature -->
+          <div class="converter-container temperature converter-hidden">
+            <select class="from-unit">
+              <option value="celsius">Celsius (°C)</option>
+              <option value="fahrenheit">Fahrenheit (°F)</option>
+              <option value="kelvin">Kelvin (K)</option>
+              <option value="rankine">Rankine (°R)</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="celsius">Celsius (°C)</option>
+              <option value="fahrenheit">Fahrenheit (°F)</option>
+              <option value="kelvin">Kelvin (K)</option>
+              <option value="rankine">Rankine (°R)</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn"
+            ></button>
+            <div class="result" id="conversion-result">0 °C = 0 °C</div>
+          </div>
+
+          <!-- energy -->
+          <div class="converter-container energy converter-hidden">
+            <select class="from-unit">
+              <option value="joule">Joule (J)</option>
+              <option value="btu">BTU (British Thermal Unit)</option>
+              <option value="calorie">Calorie (cal)</option>
+              <option value="ev">Electronvolt (eV)</option>
+              <option value="erg">Erg</option>
+              <option value="ftLb">Foot-Pound (ftLb)</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="joule">Joule (J)</option>
+              <option value="btu">BTU (British Thermal Unit)</option>
+              <option value="calorie">Calorie (cal)</option>
+              <option value="ev">Electronvolt (eV)</option>
+              <option value="erg">Erg</option>
+              <option value="ftLb">Foot-Pound (ftLb)</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn"
+            ></button>
+            <div class="result" id="conversion-result">0 J = 0 J</div>
+          </div>
+
+          <!-- digital storage -->
+          <div class="converter-container digital-storage converter-hidden">
+            <select class="from-unit">
+              <option value="bit">Bit (b)</option>
+              <option value="byte">Byte (B)</option>
+              <option value="kilobit">Kilobit (Kb)</option>
+              <option value="kilobyte">Kilobyte (KB)</option>
+              <option value="megabit">Megabit (Mb)</option>
+              <option value="megabyte">Megabyte (MB)</option>
+              <option value="gigabit">Gigabit (Gb)</option>
+              <option value="gigabyte">Gigabyte (GB)</option>
+              <option value="terabit">Terabit (Tb)</option>
+              <option value="terabyte">Terabyte (TB)</option>
+              <option value="petabit">Petabit (Pb)</option>
+              <option value="petabyte">Petabyte (PB)</option>
+              <option value="exabit">Exabit (Eb)</option>
+              <option value="exabyte">Exabyte (EB)</option>
+              <option value="zettabit">Zettabit (Zb)</option>
+              <option value="zettabyte">Zettabyte (ZB)</option>
+              <option value="yobibit">Yobibit (Yb)</option>
+              <option value="yobibyte">Yobibyte (YiB)</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="bit">Bit (b)</option>
+              <option value="byte">Byte (B)</option>
+              <option value="kilobit">Kilobit (Kb)</option>
+              <option value="kilobyte">Kilobyte (KB)</option>
+              <option value="megabit">Megabit (Mb)</option>
+              <option value="megabyte">Megabyte (MB)</option>
+              <option value="gigabit">Gigabit (Gb)</option>
+              <option value="gigabyte">Gigabyte (GB)</option>
+              <option value="terabit">Terabit (Tb)</option>
+              <option value="terabyte">Terabyte (TB)</option>
+              <option value="petabit">Petabit (Pb)</option>
+              <option value="petabyte">Petabyte (PB)</option>
+              <option value="exabit">Exabit (Eb)</option>
+              <option value="exabyte">Exabyte (EB)</option>
+              <option value="zettabit">Zettabit (Zb)</option>
+              <option value="zettabyte">Zettabyte (ZB)</option>
+              <option value="yobibit">Yobibit (Yb)</option>
+              <option value="yobibyte">Yobibyte (YiB)</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn"
+            ></button>
+            <div class="result" id="conversion-result">0 b = 0 b</div>
+          </div>
+
+          <!-- currency -->
+          <div class="converter-container currency converter-hidden">
+            <select class="from-unit">
+              <option value="inr">Ind Rupee (INR)</option>
+              <option value="usd">US Dollar (USD)</option>
+              <option value="eur">Euro (EUR)</option>
+              <option value="jpy">Yen (JPY)</option>
+              <option value="gbp">Pound (GBP)</option>
+              <option value="aud">AUS Dollar (AUD)</option>
+              <option value="cad">CAD Dollar (CAD)</option>
+              <option value="chf">Franc (CHF)</option>
+              <option value="cny">Yuan (CNY)</option>
+              <option value="brl">Real (BRL)</option>
+              <option value="rub">Ruble (RUB)</option>
+              <option value="zar">Rand (ZAR)</option>
+              <option value="sgd">SG Dollar (SGD)</option>
+              <option value="hkd">HK Dollar (HKD)</option>
+              <option value="nzd">NZ Dollar (NZD)</option>
+              <option value="krw">Won (KRW)</option>
+              <option value="sek">Krona (SEK)</option>
+              <option value="nok">Krone (NOK)</option>
+              <option value="dkk">Danish Krone (DKK)</option>
+              <option value="aed">UAE Dirham (AED)</option>
+              <option value="try">Lira (TRY)</option>
+            </select>
+            <span class="to-label">to</span>
+            <select class="to-unit">
+              <option value="inr">Ind Rupee (INR)</option>
+              <option value="usd">US Dollar (USD)</option>
+              <option value="eur">Euro (EUR)</option>
+              <option value="jpy">Yen (JPY)</option>
+              <option value="gbp">Pound (GBP)</option>
+              <option value="aud">AUS Dollar (AUD)</option>
+              <option value="cad">CAD Dollar (CAD)</option>
+              <option value="chf">Franc (CHF)</option>
+              <option value="cny">Yuan (CNY)</option>
+              <option value="brl">Real (BRL)</option>
+              <option value="rub">Ruble (RUB)</option>
+              <option value="zar">Rand (ZAR)</option>
+              <option value="sgd">SG Dollar (SGD)</option>
+              <option value="hkd">HK Dollar (HKD)</option>
+              <option value="nzd">NZ Dollar (NZD)</option>
+              <option value="krw">Won (KRW)</option>
+              <option value="sek">Krona (SEK)</option>
+              <option value="nok">Krone (NOK)</option>
+              <option value="dkk">Danish Krone (DKK)</option>
+              <option value="aed">UAE Dirham (AED)</option>
+              <option value="try">Lira (TRY)</option>
+            </select>
+            <button
+              class="switch-btn tool-tip tip-below"
+              data-tooltip="Switch Conversion Units"
+              id="switch-btn"
+            ></button>
+            <div class="result" id="conversion-result">0 INR = 0 INR</div>
+          </div>
+
+          <!-- Keypad for advanced options -->
+
+          <div class="keypad advanced-keypad">
+            <div class="basic-buttons">
+              <button class="tool-tip tip-below" data-tooltip="Clear Display">
+                C
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Start Group">
+                (
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="End Group">
+                )
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Modulus Divide">
+                mod
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Pi">π</button>
+
+              <button class="btn-grey">7</button>
+              <button class="btn-grey">8</button>
+              <button class="btn-grey">9</button>
+              <button class="tool-tip tip-below" data-tooltip="Divide">
+                ÷
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Square Root">
+                √
+              </button>
+
+              <button class="btn-grey">4</button>
+              <button class="btn-grey">5</button>
+              <button class="btn-grey">6</button>
+              <button class="tool-tip tip-below" data-tooltip="Multiply">
+                ×
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Square">
+                x²
+              </button>
+
+              <button class="btn-grey">1</button>
+              <button class="btn-grey">2</button>
+              <button class="btn-grey">3</button>
+              <button class="tool-tip tip-below" data-tooltip="Subtract">
+                -
+              </button>
+              <button
+                class="btn-orange tool-tip tip-above"
+                data-tooltip="Calculate Result"
+              >
+                =
+              </button>
+
+              <button class="btn-grey">0</button>
+              <button>.</button>
+              <button class="tool-tip tip-above" data-tooltip="Percentage">
+                %
+              </button>
+              <button class="tool-tip tip-above" data-tooltip="Addition">
+                +
+              </button>
+            </div>
+
+            <div class="advanced-buttons">
+              <button class="tool-tip tip-below" data-tooltip="Subscript Mode">
+                ↓n
+              </button>
+              <button
+                class="tool-tip tip-below"
+                data-tooltip="Superscript Mode"
+              >
+                ↑n
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Cosine">
+                cos
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Sine">
+                sin
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Tangent">
+                tan
+              </button>
+
+              <button class="tool-tip tip-below" data-tooltip="Factorize">
+                a×b
+              </button>
+              <button
+                class="tool-tip tip-below"
+                data-tooltip="Scientific Exponent"
+              >
+                ×10<sup>ʸ</sup>
+              </button>
+              <button
+                class="tool-tip tip-below"
+                data-tooltip="Hyperbolic Cosine"
+              >
+                cosh
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Hyperbolic Sine">
+                sinh
+              </button>
+              <button
+                class="tool-tip tip-below"
+                data-tooltip="Hyperbolic Tangent"
+              >
+                tanh
+              </button>
+
+              <button class="tool-tip tip-below" data-tooltip="Exponent">
+                x<sup>ⁿ</sup>
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Inverse">
+                x<sup>-1</sup>
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Euler's Number">
+                e
+              </button>
+              <button
+                class="tool-tip tip-below"
+                data-tooltip="Natural Logarithm"
+              >
+                ln
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Logarithm">
+                log
+              </button>
+
+              <button class="tool-tip tip-below" data-tooltip="Factorial">
+                x!
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Absolute Value">
+                |x|
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Imaginary Unit">
+                i
+              </button>
+              <button class="tool-tip tip-below" data-tooltip="Real Component">
+                Re
+              </button>
+              <button
+                class="tool-tip tip-below"
+                data-tooltip="Imaginary Component"
+              >
+                Im
+              </button>
+
+              <button
+                class="tool-tip tip-above"
+                data-tooltip="Additional Functions"
+              >
+                f(x)
+              </button>
+              <button
+                class="tool-tip tip-above"
+                data-tooltip="Complex Conjugate"
+              >
+                conj
+              </button>
+              <button
+                class="tool-tip tip-above"
+                data-tooltip="Complex Argument"
+              >
+                Arg
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <!-- Link external js -->
-    <script src="script.js" type="module"></script>
-    <script src="conversionTable.js" type="module"></script>
-</body>
-
+  </body>
 </html>
