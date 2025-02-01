@@ -10,9 +10,6 @@ document.getElementById("displayText").addEventListener("input", () => {
   displayStr = document.getElementById("displayText").value;
 });
 
-// /* ------------------ CONVERSTION TABLE / Unit conversion ------------------- */
-// conversionTable.js
-
 // convert function
 function convert(quantityType, baseUnit, targetUnit, value) {
   //Verify if the value is a number or not
@@ -72,43 +69,15 @@ function convert(quantityType, baseUnit, targetUnit, value) {
       } else conversionResult = value;
     }
 
-    if (baseUnit === "kelvin") {
-      if (targetUnit === "fahrenheit") {
-        conversionResult =
-          conversionTable.temperature.kelvinToFahrenheit(value);
-      } else if (targetUnit === "celsius") {
-        conversionResult = conversionTable.temperature.kelvinToCelsius(value);
-      } else if (targetUnit === "rankine") {
-        conversionResult = conversionTable.temperature.kelvinToRankine(value);
-      } else conversionResult = value;
+    else {
+        // Handle other unit conversions
+        if (conversionTable[quantityType] && conversionTable[quantityType][baseUnit] && conversionTable[quantityType][baseUnit][targetUnit]) {
+            const conversionFactor = conversionTable[quantityType][baseUnit][targetUnit];
+            conversionResult = value * conversionFactor;
+        } else {
+            throw new Error(`Conversion from ${baseUnit} to ${targetUnit} not available in ${quantityType}.`);
+        }
     }
-
-    if (baseUnit === "rankine") {
-      if (targetUnit === "fahrenheit") {
-        conversionResult =
-          conversionTable.temperature.rankineToFahrenheit(value);
-      } else if (targetUnit === "kelvin") {
-        conversionResult = conversionTable.temperature.rankineToKelvin(value);
-      } else if (targetUnit === "celsius") {
-        conversionResult = conversionTable.temperature.rankineToCelsius(value);
-      } else conversionResult = value;
-    }
-  } else {
-    // Handle other unit conversions
-    if (
-      conversionTable[quantityType] &&
-      conversionTable[quantityType][baseUnit] &&
-      conversionTable[quantityType][baseUnit][targetUnit]
-    ) {
-      const conversionFactor =
-        conversionTable[quantityType][baseUnit][targetUnit];
-      conversionResult = value * conversionFactor;
-    } else {
-      throw new Error(
-        `Conversion from ${baseUnit} to ${targetUnit} not available in ${quantityType}.`
-      );
-    }
-  }
 
   //Show updated result on screen
   document.querySelector(
@@ -202,22 +171,26 @@ setOfToUnitSelectors.forEach((element) => {
   });
 });
 
-const inputText = document.getElementById("displayText");
-inputText.addEventListener("input", () => {
-  convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
-});
+const unitSwitchBtns = document.querySelectorAll('.switch-btn');
+unitSwitchBtns.forEach(switchBtn => {
+    switchBtn.addEventListener('click', () => {
+        let temp = selectedFromUnit;
+        document.querySelector(".converter-active .from-unit").value = selectedToUnit;
+        selectedFromUnit = selectedToUnit;
 
-const unitSwitchBtns = document.querySelectorAll(".switch-btn");
-unitSwitchBtns.forEach((switchBtn) => {
-  switchBtn.addEventListener("click", () => {
-    let temp = selectedFromUnit;
-    document.querySelector(".converter-active .from-unit").value =
-      selectedToUnit;
-    selectedFromUnit = selectedToUnit;
+        document.querySelector(".converter-active .to-unit").value = temp;
+        selectedToUnit = temp;
 
-    document.querySelector(".converter-active .to-unit").value = temp;
-    selectedToUnit = temp;
+        convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
+    })
+})
 
-    convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
-  });
+document.getElementById('clear-btn').addEventListener('click', () => {
+    inputText.value = "0";
+    // Create and dispatch the input event
+    const event = new Event('input', {
+        bubbles: true,
+        cancelable: true
+    });
+    inputText.dispatchEvent(event);
 });
