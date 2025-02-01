@@ -67,130 +67,143 @@ function convert(quantityType, baseUnit, targetUnit, value) {
         conversionResult =
           conversionTable.temperature.fahrenheitToRankine(value);
       } else conversionResult = value;
+    } else {
+      // Handle other unit conversions
+      if (
+        conversionTable[quantityType] &&
+        conversionTable[quantityType][baseUnit] &&
+        conversionTable[quantityType][baseUnit][targetUnit]
+      ) {
+        const conversionFactor =
+          conversionTable[quantityType][baseUnit][targetUnit];
+        conversionResult = value * conversionFactor;
+      } else {
+        throw new Error(
+          `Conversion from ${baseUnit} to ${targetUnit} not available in ${quantityType}.`
+        );
+      }
     }
 
-    else {
-        // Handle other unit conversions
-        if (conversionTable[quantityType] && conversionTable[quantityType][baseUnit] && conversionTable[quantityType][baseUnit][targetUnit]) {
-            const conversionFactor = conversionTable[quantityType][baseUnit][targetUnit];
-            conversionResult = value * conversionFactor;
-        } else {
-            throw new Error(`Conversion from ${baseUnit} to ${targetUnit} not available in ${quantityType}.`);
-        }
-    }
+    //Show updated result on screen
+    document.querySelector(
+      `.${quantityType} .result`
+    ).textContent = `${value} ${baseUnit} = ${conversionResult} ${targetUnit}`;
+  }
 
-  //Show updated result on screen
-  document.querySelector(
-    `.${quantityType} .result`
-  ).textContent = `${value} ${baseUnit} = ${conversionResult} ${targetUnit}`;
-}
-
-/* 
+  /* 
   -- UNDO BUTTON --
   Removes the last character from the displayed expression.
 */
-document.getElementById("undo").addEventListener("click", () => {
-  displayStr = displayStr.slice(0, -1);
-  displayText.value = displayStr || "0";
-});
+  document.getElementById("undo").addEventListener("click", () => {
+    displayStr = displayStr.slice(0, -1);
+    displayText.value = displayStr || "0";
+  });
 
-/* 
+  /* 
   -- MODE SWITCHING --
   "advanced": show the advanced keypad, including advanced buttons
   "basic": show the keypad but hide advanced buttons
   "keyboard": hide the entire panel (user can type into the display manually)
 */
-// Get the select element and the result display element
-const modeSelector = document.getElementById("modeSelector");
-const advancedButtons = document.querySelector(".advanced-buttons");
-const basicButtons = document.querySelector(".basic-buttons");
-// Add an event listener for the change event
-modeSelector.addEventListener("change", () => {
-  // Get the selected value
-  const selectedValue = modeSelector.value;
-  switch (selectedValue) {
-    case "advanced":
-      advancedButtons.classList.remove("panel-hidden");
-      basicButtons.classList.remove("panel-hidden");
-      break;
-    case "basic":
-      advancedButtons.classList.add("panel-hidden");
-      basicButtons.classList.remove("panel-hidden");
-      break;
-    case "keyboard":
-      basicButtons.classList.add("panel-hidden");
-      advancedButtons.classList.add("panel-hidden");
-      break;
-  }
-});
-
-/** ----- CONVERSION MODE SELECTOR ------ */
-
-//Quantity changing
-let selectedConverter = document.querySelector(".angle");
-let selectedFromUnit = document.querySelector(
-  ".converter-active .from-unit"
-).value;
-let selectedToUnit = document.querySelector(".converter-active .to-unit").value;
-const conversionSelector = document.querySelector("#quantitySelector");
-let selectedQuantity = conversionSelector.value;
-const quantityConverterSet = document.querySelectorAll(".converter-container");
-conversionSelector.addEventListener("change", () => {
-  selectedConverter.classList.add("converter-hidden");
-  selectedConverter.classList.remove("converter-active");
-  selectedQuantity = conversionSelector.value;
-  quantityConverterSet.forEach((element) => {
-    if (element.classList.contains(selectedQuantity))
-      selectedConverter = element;
+  // Get the select element and the result display element
+  const modeSelector = document.getElementById("modeSelector");
+  const advancedButtons = document.querySelector(".advanced-buttons");
+  const basicButtons = document.querySelector(".basic-buttons");
+  // Add an event listener for the change event
+  modeSelector.addEventListener("change", () => {
+    // Get the selected value
+    const selectedValue = modeSelector.value;
+    switch (selectedValue) {
+      case "advanced":
+        advancedButtons.classList.remove("panel-hidden");
+        basicButtons.classList.remove("panel-hidden");
+        break;
+      case "basic":
+        advancedButtons.classList.add("panel-hidden");
+        basicButtons.classList.remove("panel-hidden");
+        break;
+      case "keyboard":
+        basicButtons.classList.add("panel-hidden");
+        advancedButtons.classList.add("panel-hidden");
+        break;
+    }
   });
-  selectedConverter.classList.remove("converter-hidden");
-  selectedConverter.classList.add("converter-active");
-  selectedFromUnit = document.querySelector(
+
+  /** ----- CONVERSION MODE SELECTOR ------ */
+
+  //Quantity changing
+  let selectedConverter = document.querySelector(".angle");
+  let selectedFromUnit = document.querySelector(
     ".converter-active .from-unit"
   ).value;
-  selectedToUnit = document.querySelector(".converter-active .to-unit").value;
-
-  convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
-});
-
-//Unit Changing
-const setOfFromUnitSelectors = document.querySelectorAll(".from-unit");
-setOfFromUnitSelectors.forEach((element) => {
-  element.addEventListener("change", () => {
+  let selectedToUnit = document.querySelector(
+    ".converter-active .to-unit"
+  ).value;
+  const conversionSelector = document.querySelector("#quantitySelector");
+  let selectedQuantity = conversionSelector.value;
+  const quantityConverterSet = document.querySelectorAll(
+    ".converter-container"
+  );
+  conversionSelector.addEventListener("change", () => {
+    selectedConverter.classList.add("converter-hidden");
+    selectedConverter.classList.remove("converter-active");
+    selectedQuantity = conversionSelector.value;
+    quantityConverterSet.forEach((element) => {
+      if (element.classList.contains(selectedQuantity))
+        selectedConverter = element;
+    });
+    selectedConverter.classList.remove("converter-hidden");
+    selectedConverter.classList.add("converter-active");
     selectedFromUnit = document.querySelector(
       ".converter-active .from-unit"
     ).value;
-    convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
-  });
-});
-const setOfToUnitSelectors = document.querySelectorAll(".to-unit");
-setOfToUnitSelectors.forEach((element) => {
-  element.addEventListener("change", () => {
     selectedToUnit = document.querySelector(".converter-active .to-unit").value;
+
     convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
   });
-});
 
-const unitSwitchBtns = document.querySelectorAll('.switch-btn');
-unitSwitchBtns.forEach(switchBtn => {
-    switchBtn.addEventListener('click', () => {
-        let temp = selectedFromUnit;
-        document.querySelector(".converter-active .from-unit").value = selectedToUnit;
-        selectedFromUnit = selectedToUnit;
+  //Unit Changing
+  const setOfFromUnitSelectors = document.querySelectorAll(".from-unit");
+  setOfFromUnitSelectors.forEach((element) => {
+    element.addEventListener("change", () => {
+      selectedFromUnit = document.querySelector(
+        ".converter-active .from-unit"
+      ).value;
+      convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
+    });
+  });
+  const setOfToUnitSelectors = document.querySelectorAll(".to-unit");
+  setOfToUnitSelectors.forEach((element) => {
+    element.addEventListener("change", () => {
+      selectedToUnit = document.querySelector(
+        ".converter-active .to-unit"
+      ).value;
+      convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
+    });
+  });
 
-        document.querySelector(".converter-active .to-unit").value = temp;
-        selectedToUnit = temp;
+  const unitSwitchBtns = document.querySelectorAll(".switch-btn");
+  unitSwitchBtns.forEach((switchBtn) => {
+    switchBtn.addEventListener("click", () => {
+      let temp = selectedFromUnit;
+      document.querySelector(".converter-active .from-unit").value =
+        selectedToUnit;
+      selectedFromUnit = selectedToUnit;
 
-        convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
-    })
-})
+      document.querySelector(".converter-active .to-unit").value = temp;
+      selectedToUnit = temp;
 
-document.getElementById('clear-btn').addEventListener('click', () => {
+      convert(selectedQuantity, selectedFromUnit, selectedToUnit, displayStr);
+    });
+  });
+
+  document.getElementById("clear-btn").addEventListener("click", () => {
     inputText.value = "0";
     // Create and dispatch the input event
-    const event = new Event('input', {
-        bubbles: true,
-        cancelable: true
+    const event = new Event("input", {
+      bubbles: true,
+      cancelable: true,
     });
     inputText.dispatchEvent(event);
-});
+  });
+}
