@@ -62,7 +62,7 @@ body {
 .tool-tip::after {
   content: attr(data-tooltip);
   visibility: hidden;
-  width: 140px;
+  min-width: 140px;
   font-size: 0.7rem;
   background-color: black;
   color: #fff;
@@ -70,7 +70,7 @@ body {
   border-radius: 6px;
   padding: 5px;
   position: absolute;
-  z-index: 1;
+  z-index: 1000;
   left: 50%;
   margin-left: -60px;
   /* Center the tooltip */
@@ -277,4 +277,9 @@ button:hover {
 
 .panel-hidden {
   display: none;
+}
+
+.subscript {
+  font-size: smaller;
+  vertical-align: sub;
 }
