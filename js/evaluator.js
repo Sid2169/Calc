@@ -29,7 +29,7 @@
   function EvaluateError(message) {
     this.name = 'EvaluateError';
     this.message = message;
-    this.stack = this instanceof Error ? '' : new Error(message).stack;
+    this.stack = '';
   }
   EvaluateError.prototype = Object.create(Error.prototype);
   EvaluateError.prototype.constructor = EvaluateError;
