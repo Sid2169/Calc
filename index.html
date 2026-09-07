@@ -29,7 +29,7 @@
             <!-- Display Area -->
 
             <div id="displayArea" class="display-area">
-                <input type="text" id="displayText" placeholder="0">
+                <input type="text" id="displayText" class="subscript" value="0">
             </div>
 
             <!-- PANELS -->
@@ -512,7 +512,7 @@
                     </div>
 
                     <div class="advanced-buttons">
-                        <button class="tool-tip tip-below" data-tooltip="Subscript Mode">↓n</button>
+                        <button class="tool-tip tip-below" data-tooltip="Subscript Mode" id="subScript">↓n</button>
                         <button class="tool-tip tip-below" data-tooltip="Superscript Mode">↑n</button>
                         <button class="tool-tip tip-below" data-tooltip="Cosine">cos</button>
                         <button class="tool-tip tip-below" data-tooltip="Sine">sin</button>
@@ -546,6 +546,10 @@
     </div>
 
     <!-- Link external js -->
+    <script src="js/evaluator.js"></script>
+    <script src="js/converter.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/app.js"></script>
     <script src="script.js"></script>
 </body>
 
