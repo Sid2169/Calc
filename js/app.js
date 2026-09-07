@@ -18,6 +18,11 @@
     throw new Error('app.js requires calculator.js to be loaded first');
   }
 
+  const Converter = window.Converter;
+  if (Converter) {
+    Converter.init();
+  }
+
   const modeSelector = document.getElementById('modeSelector');
   const advancedButtons = document.querySelector('.advanced-buttons');
   const basicButtons = document.querySelector('.basic-buttons');

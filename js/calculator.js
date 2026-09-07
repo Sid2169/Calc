@@ -86,6 +86,8 @@
 
   function syncDisplay() {
     displayEl.value = displayStr;
+    // Notify other modules (e.g. the unit converter) that the value changed.
+    document.dispatchEvent(new CustomEvent('calculator:display', { detail: displayStr }));
   }
 
   // Keep internal state in sync with manual keyboard typing in the input
