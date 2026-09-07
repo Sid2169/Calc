@@ -29,7 +29,7 @@
   function EvaluateError(message) {
     this.name = 'EvaluateError';
     this.message = message;
-    this.stack = this instanceof Error ? '' : new Error(message).stack;
+    this.stack = '';
   }
   EvaluateError.prototype = Object.create(Error.prototype);
   EvaluateError.prototype.constructor = EvaluateError;
@@ -248,10 +248,6 @@
       const A = Complex.toC(a), B = Complex.toC(b);
       if (A.im !== 0 || B.im !== 0) throw new EvaluateError('mod is not defined for complex numbers');
       return A.re % B.re;
-    },
-    eq(a, b) {
-      const A = Complex.toC(a), B = Complex.toC(b);
-      return A.re === B.re && A.im === B.im;
     }
   };
 
@@ -809,7 +805,7 @@
       // element grouping still binds looser (e.g. -2pi -> (-2)pi in outer loop,
       // and -2*3 -> (-2)*3).
       const op = this.next().text;
-      const operand = this.parseExpression(op === '-' ? UNARY_PREC : UNARY_PREC);
+      const operand = this.parseExpression(UNARY_PREC);
       left = new Unary(op, operand);
     } else {
       left = this.parsePostfix(this.parsePrimary());

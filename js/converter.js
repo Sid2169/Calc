@@ -1049,27 +1049,6 @@ const conversionTable = {
         },
 
     },
-    temperature: {
-        celsiusToCelsius: (c) => c,
-        celsiusToFahrenheit: (c) => (c * 9 / 5) + 32,
-        celsiusToKelvin: (c) => c + 273.15,
-        celsiusToRankine: (c) => (c + 273.15) * 9 / 5,
-
-        fahrenheitToCelsius: (f) => (f - 32) * 5 / 9,
-        fahrenheitToFahrenheit: (f) => f,
-        fahrenheitToKelvin: (f) => (f - 32) * 5 / 9 + 273.15,
-        fahrenheitToRankine: (f) => f + 459.67,
-
-        kelvinToCelsius: (k) => k - 273.15,
-        kelvinToFahrenheit: (k) => (k - 273.15) * 9 / 5 + 32,
-        kelvinToKelvin: (k) => k,
-        kelvinToRankine: (k) => k * 9 / 5,
-
-        rankineToCelsius: (r) => (r - 491.67) * 5 / 9,
-        rankineToFahrenheit: (r) => r - 459.67,
-        rankineToKelvin: (r) => r * 5 / 9,
-        rankineToRankine: (r) => r,
-    },
     time: {
         millennium: {
             millennium: 1,
@@ -1653,7 +1632,7 @@ const conversionTable = {
     // switches to currency
     refreshCurrencyCache();
 
-    setQuantity(quantitySelector ? quantitySelector.value : 'angle');
+    setQuantity(quantitySelector.value);
   }
 
   global.Converter = {
