@@ -76,6 +76,9 @@
   }
 
   function formatResult(value) {
+    if (value && typeof value === 'object' && value.__definedFunction) {
+      return String(value.result);
+    }
     if (value && typeof value === 'object' && typeof value.re === 'number') {
       return formatComplex(value);
     }
@@ -102,6 +105,33 @@
 
   const OPERATOR_RE = /[÷×+−\-*/]/;
 
+  // Unicode superscript/subscript digits, used for entry via the ↑n / ↓n
+  // modes and for radix notation (e.g. 75₈).
+  const SUP_DIGITS = { '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+                       '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹' };
+  const SUB_DIGITS = { '0': '₀', '1': '₁', '2': '₂', '3': '₃', '4': '₄',
+                       '5': '₅', '6': '₆', '7': '₇', '8': '₈', '9': '₉' };
+
+  // Reverse maps for translateSymbols (unicode superscript → ASCII digit).
+  const SUP_TO_ASCII = Object.create(null);
+  Object.keys(SUP_DIGITS).forEach((k) => { SUP_TO_ASCII[SUP_DIGITS[k]] = k; });
+
+  // ↑n / ↓n arm the next digit to be entered as a superscript / subscript
+  // character. A single digit consumes the armed flag (GNOME behaves the
+  // same way: Ctrl+<digit> / Alt+<digit> enter one raised/lowered digit).
+  let superscriptArmed = false;
+  let subscriptArmed = false;
+
+  function armSuperscript() {
+    subscriptArmed = false;
+    superscriptArmed = !superscriptArmed;
+  }
+
+  function armSubscript() {
+    superscriptArmed = false;
+    subscriptArmed = !subscriptArmed;
+  }
+
   function tailChar() {
     return displayStr[displayStr.length - 1] || '';
   }
@@ -109,6 +139,19 @@
   // Smart token appending: error recovery, implicit multiplication,
   // operator chaining, decimal-point guards and leading-zero handling.
   function insertToken(token) {
+    // A digit typed while ↑n / ↓n is armed becomes a raised/lowered digit.
+    // Any other token cancels the pending mode.
+    if (superscriptArmed && /^[0-9]$/.test(token)) {
+      token = SUP_DIGITS[token];
+      superscriptArmed = false;
+    } else if (subscriptArmed && /^[0-9]$/.test(token)) {
+      token = SUB_DIGITS[token];
+      subscriptArmed = false;
+    } else if (superscriptArmed || subscriptArmed) {
+      superscriptArmed = false;
+      subscriptArmed = false;
+    }
+
     // After an error/infinity result, start fresh on the next input
     if (displayStr === 'Error' || displayStr === 'Infinity' || displayStr === '-Infinity') {
       if (OPERATOR_RE.test(token)) return;
@@ -194,10 +237,14 @@
     out = out.replace(/÷/g, '/');
     out = out.replace(/×/g, '*');
     out = out.replace(/π/g, 'pi');
+    out = out.replace(/τ/g, 'tau');
+    out = out.replace(/φ/g, 'phi');
     out = out.replace(/−/g, '-');
     out = out.replace(/⁻¹/g, '^(-1)');
     out = out.replace(/²/g, '^2');
     out = out.replace(/ⁿ/g, '^');
+    out = out.replace(/⁻([⁰¹²³⁴⁵⁶⁷⁸⁹])/g, (_, d) => '^(-' + SUP_TO_ASCII[d] + ')');
+    out = out.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, (d) => '^' + SUP_TO_ASCII[d]);
     out = out.replace(/√/g, 'sqrt');
     return out;
   }
@@ -215,6 +262,20 @@
     }
   }
 
+  // Evaluate without the `_` side-effect; used by the unit converter.
+  function computeValue(expressionStr) {
+    let expr = translateSymbols(String(expressionStr)).trim();
+    if (expr === '') {
+      return { ok: false, result: 'Error', message: 'Empty expression' };
+    }
+    try {
+      const value = evaluator.safeEvaluate(expr);
+      return { ok: true, result: formatResult(value), value };
+    } catch (err) {
+      return { ok: false, result: 'Error', message: err.message };
+    }
+  }
+
   function calculate() {
     const expr = displayStr;
     const res = evaluate(expr);
@@ -225,6 +286,48 @@
     justEvaluated = true;
     syncDisplay();
     return res;
+  }
+
+  // Factor an integer result into prime powers ("a×b" button), e.g.
+  // 144 -> "2^4×3^2". Non-integer / too-small / non-finite values are left
+  // untouched.
+  function factorize() {
+    const expr = displayStr;
+    const res = evaluate(expr);
+    if (!res.ok || typeof res.value !== 'number' || !Number.isFinite(res.value) ||
+        !Number.isInteger(res.value) || Math.abs(res.value) < 2) {
+      return;
+    }
+    const n = Math.abs(res.value);
+    let out = '';
+    let m = n;
+    let p = 2;
+    while (p * p <= m) {
+      let count = 0;
+      while (m % p === 0) {
+        m /= p;
+        count++;
+      }
+      if (count > 0) {
+        if (out) out += '×';
+        out += count === 1 ? String(p) : p + '^' + count;
+      }
+      p = p === 2 ? 3 : p + 2;
+    }
+    if (m > 1) out = out ? out + '×' + m : String(m);
+    if (res.value < 0) out = '-' + out;
+    addHistory(expr, out);
+    displayStr = out;
+    justEvaluated = true;
+    syncDisplay();
+  }
+
+  // Begin a user-function definition, GNOME's f(x) editor entry point. The
+  // user replaces the name/parameter and types a body, e.g. "sq(x)=x*x".
+  function startFunctionDefinition() {
+    displayStr = 'func(x)=';
+    justEvaluated = false;
+    syncDisplay();
   }
 
   /* ---------------------------- Actions ----------------------------- */
@@ -340,7 +443,7 @@
     'xⁿ': () => insertToken('^'),
     'x-1': () => insertToken('^(-1)'),
     '×10ʸ': () => insertToken('×10^'),
-    'a×b': () => insertToken('×'),
+    'a×b': factorize,
     '|x|': () => insertToken('abs('),
     'sin': () => insertToken('sin('),
     'cos': () => insertToken('cos('),
@@ -357,9 +460,9 @@
     'Arg': () => insertToken('arg('),
     'e': () => insertToken('e'),
     'i': () => insertToken('i'),
-    'f(x)': () => {},
-    '↑n': () => insertToken('^'),
-    '↓n': () => {}
+    'f(x)': startFunctionDefinition,
+    '↑n': armSuperscript,
+    '↓n': armSubscript
   };
 
   function initButtonHandlers() {
@@ -417,6 +520,7 @@
     syncDisplay,
     insertToken,
     evaluate,
+    computeValue,
     calculate,
     clear,
     undo,

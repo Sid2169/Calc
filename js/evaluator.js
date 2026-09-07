@@ -11,7 +11,12 @@
  *   - Parentheses and implicit multiplication (e.g. 2pi, 2(3+1), (2)(3))
  *   - Functions: sin cos tan asin acos atan sinh cosh tanh log ln sqrt cbrt
  *               abs ceil floor round factorial re im conj arg
- *   - Constants: pi, e
+ *   - Constants: pi, e, i, tau, phi and physics constants (c, h, G, g, k,
+ *               R, NA, me, mp, alpha)
+ *   - Variables: x = 5 (assignment), "_" = last result, rand
+ *   - User-defined functions: sq(x) = x*x (params separated by ";")
+ *   - Subscript radix notation: 1001011₂ = 75
+ *   - Statistics: sum sumsq average median stdev stdevp var varp sgn int frac
  *
  * The evaluator is exposed globally as `Evaluator`.
  */
@@ -45,6 +50,14 @@
     return false;
   }
 
+  // Unicode subscript digits are used as a radix (base) indicator that may
+  // trail an integer literal, GNOME-Calculator style: "1001011₂" = 75,
+  // "75₈" = 61, "19₁₆" = 25.
+  const SUBSCRIPT_DIGITS = {
+    '₀': 0, '₁': 1, '₂': 2, '₃': 3, '₄': 4,
+    '₅': 5, '₆': 6, '₇': 7, '₈': 8, '₉': 9
+  };
+
   function tokenize(input) {
     const tokens = [];
     let i = 0;
@@ -58,7 +71,8 @@
         continue;
       }
 
-      // Numbers: decimal and scientific notation (e.g. 1.5e-3)
+      // Numbers: decimal and scientific notation (e.g. 1.5e-3), optionally
+      // followed by a subscript radix indicator handled below.
       if (/[0-9]/.test(ch) || (ch === '.' && /[0-9]/.test(input[i + 1] || ''))) {
         let start = i;
         let seenDot = false;
@@ -78,10 +92,36 @@
             break;
           }
         }
+        const mantissa = input.slice(start, i);
+
+        // Trailing subscript digits select a radix for the whole literal.
+        let baseText = '';
+        while (i < n && SUBSCRIPT_DIGITS[input[i]] !== undefined) {
+          baseText += SUBSCRIPT_DIGITS[input[i]];
+          i++;
+        }
         const text = input.slice(start, i);
-        const value = Number(text);
-        if (isNaN(value)) {
-          throw new EvaluateError('Invalid number: ' + text);
+
+        let value;
+        if (baseText === '') {
+          value = Number(mantissa);
+          if (isNaN(value)) {
+            throw new EvaluateError('Invalid number: ' + text);
+          }
+        } else {
+          if (!/^\d+$/.test(mantissa)) {
+            throw new EvaluateError('Invalid number: ' + text);
+          }
+          const base = Number(baseText);
+          if (base < 2 || base > 36) {
+            throw new EvaluateError('Invalid base: ' + baseText);
+          }
+          for (let k = 0; k < mantissa.length; k++) {
+            if (Number(mantissa[k]) >= base) {
+              throw new EvaluateError('Invalid digit "' + mantissa[k] + '" in base ' + base);
+            }
+          }
+          value = parseInt(mantissa, base);
         }
         tokens.push({ type: 'number', value, text });
         continue;
@@ -116,9 +156,9 @@
       }
 
       // Single character operators
-      const single = ['+', '-', '*', '/', '%', '^', '(', ')', '!', ','];
+      const single = ['+', '-', '*', '/', '%', '^', '(', ')', '!', ',', ';', '='];
       if (single.indexOf(ch) !== -1) {
-        tokens.push({ type: ch === '(' || ch === ')' || ch === ',' ? 'punc' : 'op', text: ch, value: ch });
+        tokens.push({ type: ch === '(' || ch === ')' || ch === ',' || ch === ';' ? 'punc' : 'op', text: ch, value: ch });
         i++;
         continue;
       }
@@ -326,6 +366,71 @@
     return Complex.mul(Complex.c(0, 0.5), Complex.sub(num, den));
   }
 
+  function complexAsinh(z) {
+    if (!Complex.isC(z)) return Math.asinh(z);
+    const Z = Complex.toC(z);
+    const root = complexSqrt(Complex.add(1, Complex.mul(Z, Z)));
+    return complexLog(Complex.add(Z, root));
+  }
+
+  function complexAcosh(z) {
+    if (!Complex.isC(z)) return Math.acosh(z);
+    const Z = Complex.toC(z);
+    const a = complexSqrt(Complex.add(Z, 1));
+    const b = complexSqrt(Complex.sub(Z, 1));
+    return complexLog(Complex.add(Z, Complex.mul(a, b)));
+  }
+
+  function complexAtanh(z) {
+    if (!Complex.isC(z)) return Math.atanh(z);
+    const Z = Complex.toC(z);
+    const num = complexLog(Complex.add(1, Z));
+    const den = complexLog(Complex.sub(1, Z));
+    return Complex.mul(0.5, Complex.div(num, den));
+  }
+
+  /* --------------------- Variable / function storage ------------------ */
+
+  // User-definable variable store. "_" always holds the most recent result.
+  const VAR_STORE = Object.create(null);
+  VAR_STORE['_'] = 0;
+
+  // Named constants (built-in values that cannot be reassigned).
+  const CONSTANT_MAP = {
+    pi: Math.PI, π: Math.PI,
+    e: Math.E,
+    i: { re: 0, im: 1 },
+    tau: 2 * Math.PI, τ: 2 * Math.PI,
+    phi: (1 + Math.sqrt(5)) / 2, φ: (1 + Math.sqrt(5)) / 2,
+    c: 299792458,                         // speed of light, m/s
+    h: 6.62607015e-34,                    // Planck constant, J*s
+    G: 6.67430e-11,                       // gravitational constant, N*m^2/kg^2
+    g: 9.80665,                           // standard gravity, m/s^2
+    k: 1.380649e-23,                      // Boltzmann constant, J/K
+    R: 8.31446261815324,                  // molar gas constant, J/(mol*K)
+    NA: 6.02214076e23,                    // Avogadro constant
+    me: 9.1093837015e-31,                 // electron mass, kg
+    mp: 1.67262192369e-27,                // proton mass, kg
+    alpha: 7.2973525693e-3                // fine-structure constant
+  };
+
+  // Functions that accept an arbitrary argument count (multi-arg via ,
+  // and/or ; separators).
+  const VARIADIC_FUNCTIONS = {
+    atan2: 1, min: 1, max: 1,
+    sum: 1, sumsq: 1, average: 1, avg: 1, median: 1,
+    stdev: 1, stdevp: 1, var: 1, varp: 1
+  };
+
+  // Functions defined at runtime by the user, e.g. "sq(x)=x*x".
+  const USER_FUNCTIONS = Object.create(null);
+
+  function isReserved(name) {
+    return CONSTANT_MAP[name] !== undefined ||
+      FUNCTIONS[name] !== undefined ||
+      name === 'rand';
+  }
+
   /* ------------------------------ AST -------------------------------- */
 
   function Literal(value) {
@@ -339,8 +444,71 @@
     this.name = name;
   }
   Identifier.prototype.eval = function () {
+    if (this.name === 'rand') return Math.random();
+    if (this.name in VAR_STORE) return VAR_STORE[this.name];
     throw new EvaluateError('Unknown symbol: ' + this.name);
   };
+
+  // "x = 5": assigns the right-hand value to a named variable. The value of
+  // the assignment expression itself is the assigned value.
+  function Assignment(name, rhs) {
+    this.name = name;
+    this.rhs = rhs;
+  }
+  Assignment.prototype.eval = function () {
+    if (isReserved(this.name)) {
+      throw new EvaluateError('Cannot redefine reserved name: ' + this.name);
+    }
+    const value = this.rhs.eval();
+    VAR_STORE[this.name] = value;
+    return value;
+  };
+
+  // "sq(x) = x*x": registers a user function. The parse step guarantees the
+  // "()" signature and "=" are present before this node is built.
+  function FunctionDefinition(name, params, body) {
+    this.name = name;
+    this.params = params;
+    this.body = body;
+  }
+  FunctionDefinition.prototype.eval = function () {
+    if (isReserved(this.name)) {
+      throw new EvaluateError('Cannot redefine reserved name: ' + this.name);
+    }
+    USER_FUNCTIONS[this.name] = { params: this.params.slice(), body: this.body };
+    return {
+      __definedFunction: true,
+      result: 'function ' + this.name + '(' + this.params.join(';') + ') defined'
+    };
+  };
+
+  function callUserFunction(name, argNodes) {
+    const fn = USER_FUNCTIONS[name];
+    if (argNodes.length !== fn.params.length) {
+      throw new EvaluateError('Function ' + name + ' expects ' + fn.params.length +
+        ' argument(s) but received ' + argNodes.length);
+    }
+    // Bind parameters as locals, restoring any pre-existing global values
+    // afterwards so a parameter never leaks back out.
+    const saved = {};
+    for (let k = 0; k < fn.params.length; k++) {
+      saved[fn.params[k]] = VAR_STORE[fn.params[k]];
+      VAR_STORE[fn.params[k]] = argNodes[k].eval();
+    }
+    let result;
+    try {
+      result = fn.body.eval();
+    } finally {
+      for (let k = 0; k < fn.params.length; k++) {
+        if (saved[fn.params[k]] === undefined) {
+          delete VAR_STORE[fn.params[k]];
+        } else {
+          VAR_STORE[fn.params[k]] = saved[fn.params[k]];
+        }
+      }
+    }
+    return result;
+  }
 
   function Constant(name, value) {
     this.name = name;
@@ -408,6 +576,9 @@
     this.args = args;
   }
   FunctionCall.prototype.eval = function () {
+    if (USER_FUNCTIONS[this.name]) {
+      return callUserFunction(this.name, this.args);
+    }
     return callFunction(this.name, this.args.map(function (a) { return a.eval(); }));
   };
 
@@ -445,6 +616,72 @@
     return FUNCTIONS[name].apply(null, args);
   }
 
+  /* --------------------- Statistics helpers --------------------------- */
+
+  // Statistics over a real-argument list. Complex arguments are rejected
+  // (the stats functions have no meaningful complex extension).
+  function realArgs(args, name) {
+    if (args.length < 1) {
+      throw new EvaluateError('Function ' + name + ' expects at least 1 argument');
+    }
+    return Array.prototype.map.call(args, function (x) {
+      if (Complex.isC(x)) {
+        if (x.im !== 0) {
+          throw new EvaluateError('Function ' + name + ' is not defined for complex numbers');
+        }
+        return x.re;
+      }
+      return x;
+    });
+  }
+
+  function statsSum() {
+    const l = realArgs(arguments, 'sum');
+    return l.reduce(function (a, b) { return a + b; }, 0);
+  }
+
+  function statsSumSq() {
+    const l = realArgs(arguments, 'sumsq');
+    return l.reduce(function (a, b) { return a + b * b; }, 0);
+  }
+
+  function statsAverage() {
+    const l = realArgs(arguments, 'average');
+    return l.reduce(function (a, b) { return a + b; }, 0) / l.length;
+  }
+
+  function statsMedian() {
+    const l = realArgs(arguments, 'median').slice().sort(function (a, b) { return a - b; });
+    const mid = Math.floor(l.length / 2);
+    return l.length % 2 === 1 ? l[mid] : (l[mid - 1] + l[mid]) / 2;
+  }
+
+  function statsVariance(args, sample) {
+    const l = realArgs(args, sample ? 'stdev' : 'stdevp');
+    if (sample && l.length < 2) {
+      throw new EvaluateError('stdev is undefined for a single value');
+    }
+    const mean = l.reduce(function (a, b) { return a + b; }, 0) / l.length;
+    const ss = l.reduce(function (a, b) { const d = b - mean; return a + d * d; }, 0);
+    return ss / (l.length - (sample ? 1 : 0));
+  }
+
+  function statsStdev() { return Math.sqrt(statsVariance(arguments, true)); }
+  function statsStdevp() { return Math.sqrt(statsVariance(arguments, false)); }
+  function statsVar() { return statsVariance(arguments, true); }
+  function statsVarp() { return statsVariance(arguments, false); }
+
+  function statsSgn() {
+    const x = realArgs(arguments, 'sgn')[0];
+    return x > 0 ? 1 : x < 0 ? -1 : 0;
+  }
+
+  function statsInt() { return Math.trunc(realArgs(arguments, 'int')[0]); }
+  function statsFrac() {
+    const x = realArgs(arguments, 'frac')[0];
+    return x - Math.trunc(x);
+  }
+
   const FUNCTIONS = {
     sin: complexSin,
     cos: complexCos,
@@ -452,6 +689,9 @@
     asin: complexAsin,
     acos: complexAcos,
     atan: complexAtan,
+    asinh: complexAsinh,
+    acosh: complexAcosh,
+    atanh: complexAtanh,
     atan2: function (y, x) { return Math.atan2(Complex.real(y), Complex.real(x)); },
     sinh: complexSinh,
     cosh: complexCosh,
@@ -493,6 +733,18 @@
       }
       return Math.max.apply(Math, Array.prototype.map.call(arguments, Complex.real));
     },
+    sum: statsSum,
+    sumsq: statsSumSq,
+    average: statsAverage,
+    avg: statsAverage,
+    median: statsMedian,
+    stdev: statsStdev,
+    stdevp: statsStdevp,
+    var: statsVar,
+    varp: statsVarp,
+    sgn: statsSgn,
+    int: statsInt,
+    frac: statsFrac,
     exp: complexExp
   };
 
@@ -615,15 +867,28 @@
         throw new EvaluateError('Unexpected token: ' + t.text);
 
       case 'ident': {
+        // User function definition? "name(params) = body"
+        if (this.peek() && this.peek().type === 'punc' && this.peek().text === '(' &&
+            this.looksLikeFunctionDef()) {
+          return this.parseFunctionDef(t.text);
+        }
+
+        // Variable assignment? "x = 5"
+        if (this.peek() && this.peek().type === 'op' && this.peek().text === '=') {
+          this.next(); // consume '='
+          const rhs = this.parseExpression(0);
+          return new Assignment(t.text, rhs);
+        }
+
         // Function call?
         if (this.peek() && this.peek().type === 'punc' && this.peek().text === '(') {
           this.next(); // consume '('
           const args = [];
           if (this.peek() && this.peek().text !== ')') {
             // Multi-arg functions
-            if (t.text === 'atan2' || t.text === 'min' || t.text === 'max') {
+            if (VARIADIC_FUNCTIONS[t.text] || USER_FUNCTIONS[t.text]) {
               args.push(this.parseExpression(0));
-              while (this.peek() && this.peek().text === ',') {
+              while (this.peek() && (this.peek().text === ',' || this.peek().text === ';')) {
                 this.next();
                 args.push(this.parseExpression(0));
               }
@@ -635,32 +900,74 @@
           return new FunctionCall(t.text, args);
         }
 
-        // Constant?
-        switch (t.text) {
-          case 'pi':
-          case 'π':
-            return new Constant('pi', Math.PI);
-          case 'e':
-            return new Constant('e', Math.E);
-          case 'i':
-            return new Constant('i', { re: 0, im: 1 });
-          default:
-            // Allow a constant immediately followed by digits, e.g. "e2"
-            // means e*2 and "pi3" means pi*3 and "i2" means i*2.
-            const m = /^(pi|e|π|i)(\d+)$/.exec(t.text);
-            if (m) {
-              let c;
-              if (m[1] === 'i') c = new Constant('i', { re: 0, im: 1 });
-              else c = new Constant(m[1], m[1] === 'e' ? Math.E : Math.PI);
-              return new MultiplicativeImplicit(c, new Literal(Number(m[2])));
-            }
-            throw new EvaluateError('Unknown symbol: ' + t.text);
+        // Named constant?
+        if (CONSTANT_MAP[t.text] !== undefined) {
+          return new Constant(t.text, CONSTANT_MAP[t.text]);
         }
+
+        // Allow a constant immediately followed by digits, e.g. "e2"
+        // means e*2 and "pi3" means pi*3 and "i2" means i*2.
+        const m = /^(pi|e|π|i)(\d+)$/.exec(t.text);
+        if (m) {
+          let c;
+          if (m[1] === 'i') c = new Constant('i', CONSTANT_MAP.i);
+          else c = new Constant(m[1], m[1] === 'e' ? Math.E : Math.PI);
+          return new MultiplicativeImplicit(c, new Literal(Number(m[2])));
+        }
+
+        // Variable reference (or an undefined symbol -> runtime error).
+        return new Identifier(t.text);
       }
 
       default:
         throw new EvaluateError('Unexpected token: ' + t.text);
     }
+  };
+
+  // True when the tokens at this.pos spell "name(...) = ...", i.e. a user
+  // function definition rather than a function call. A call is never followed
+  // by "=", so scanning to the matching ")" and testing the next token is a
+  // reliable discriminator.
+  Parser.prototype.looksLikeFunctionDef = function () {
+    let depth = 0;
+    for (let p = this.pos; p < this.tokens.length; p++) {
+      const t = this.tokens[p];
+      if (t.text === '(') depth++;
+      else if (t.text === ')') {
+        depth--;
+        if (depth === 0) {
+          return p + 1 < this.tokens.length && this.tokens[p + 1].text === '=';
+        }
+      }
+    }
+    return false;
+  };
+
+  Parser.prototype.parseFunctionDef = function (name) {
+    this.expect('(');
+    const params = [];
+    while (this.peek() && this.peek().text !== ')') {
+      const t = this.next();
+      if (t.type !== 'ident') {
+        throw new EvaluateError('Function parameter must be a name: ' + t.text);
+      }
+      params.push(t.text);
+      if (this.peek() && this.peek().text === ';') {
+        this.next();
+      } else {
+        break;
+      }
+    }
+    this.expect(')');
+    if (params.length === 0) {
+      throw new EvaluateError('Function needs at least one parameter');
+    }
+    this.expect('=');
+    if (!this.peek()) {
+      throw new EvaluateError('Missing function body');
+    }
+    const body = this.parseExpression(0);
+    return new FunctionDefinition(name, params, body);
   };
 
   Parser.prototype.parsePostfix = function (expr) {
@@ -683,15 +990,29 @@
 
   /* ------------------------------ API -------------------------------- */
 
-  function evaluate(expression) {
+  function _eval(expression, updateResult) {
     const parser = new Parser(String(expression).trim());
     const ast = parser.parse();
-    return ast.eval();
+    const result = ast.eval();
+    if (updateResult && (typeof result === 'number' || Complex.isC(result))) {
+      VAR_STORE['_'] = result;
+    }
+    return result;
+  }
+
+  function evaluate(expression) {
+    return _eval(expression, true);
+  }
+
+  // Evaluate without the `_` side-effect (used by the converter).
+  function safeEvaluate(expression) {
+    return _eval(expression, false);
   }
 
   // Export
   global.Evaluator = {
     evaluate: evaluate,
+    safeEvaluate: safeEvaluate,
     tokenize: tokenize,
     Error: EvaluateError
   };

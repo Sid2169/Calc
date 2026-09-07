@@ -1575,8 +1575,8 @@ const conversionTable = {
     }
     // Otherwise evaluate the expression on the display (e.g. "50+10%" -> 55)
     // using the calculator module, which handles symbol translation.
-    if (global.Calculator && typeof global.Calculator.evaluate === 'function') {
-      const res = global.Calculator.evaluate(raw);
+    if (global.Calculator && typeof global.Calculator.computeValue === 'function') {
+      const res = global.Calculator.computeValue(raw);
       if (res && res.ok) {
         const v = Number(res.result);
         if (!isNaN(v) && Number.isFinite(v)) return v;
