@@ -120,6 +120,66 @@ body {
   border-top: 1px solid #272727;
 }
 
+/* ---- HISTORY ---- */
+.history-area {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 2px;
+  padding: 8px 12px 4px;
+  font-size: 1rem;
+}
+
+.history-area.empty::before {
+  content: "History";
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  align-self: center;
+  margin: auto 0;
+}
+
+.history-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  animation: history-in 0.15s ease-out;
+}
+
+.history-entry:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+.history-entry .history-expr {
+  color: #ccc;
+  word-break: break-all;
+}
+
+.history-entry .history-value {
+  color: #fff;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@keyframes history-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ---- PANELS (Advanced, Basic, Keyboard) ---- */
 
 /* ----CONVERTER ---- */

@@ -216,7 +216,11 @@
   }
 
   function calculate() {
-    const res = evaluate(displayStr);
+    const expr = displayStr;
+    const res = evaluate(expr);
+    if (res.ok) {
+      addHistory(expr, res.result);
+    }
     displayStr = res.result;
     justEvaluated = true;
     syncDisplay();
@@ -247,6 +251,77 @@
     }
     if (displayStr === '') displayStr = '0';
     syncDisplay();
+  }
+
+  /* ----------------------------- History ----------------------------- */
+
+  // The history pane sits above the display in the .display-area and stacks
+  // every completed calculation (expression = result), newest at the bottom,
+  // GNOME-Calculator style. Clicking an entry restores its expression.
+  const historyEl = document.getElementById('historyArea');
+  const HISTORY_MAX = 200; // cap the session list to keep the DOM light
+  let historyEntries = [];
+
+  function renderHistory() {
+    if (!historyEl) return;
+    historyEl.replaceChildren();
+    historyEntries.forEach((entry, i) => {
+      const row = document.createElement('div');
+      row.className = 'history-entry';
+      row.dataset.index = String(i);
+
+      const expr = document.createElement('span');
+      expr.className = 'history-expr';
+      expr.textContent = entry.expr;
+
+      const value = document.createElement('span');
+      value.className = 'history-value';
+      value.textContent = '= ' + entry.result;
+
+      row.appendChild(expr);
+      row.appendChild(value);
+      historyEl.appendChild(row);
+    });
+    historyEl.classList.toggle('empty', historyEntries.length === 0);
+    // Keep the newest entry visible when the list overflows.
+    historyEl.scrollTop = historyEl.scrollHeight;
+  }
+
+  function addHistory(expr, result) {
+    historyEntries.push({ expr, result });
+    if (historyEntries.length > HISTORY_MAX) {
+      historyEntries.shift();
+    }
+    renderHistory();
+  }
+
+  function clearHistory() {
+    historyEntries = [];
+    renderHistory();
+  }
+
+  // Load a past expression back into the display for editing/re-running.
+  function restoreHistory(entry) {
+    displayStr = entry.expr;
+    justEvaluated = false;
+    syncDisplay();
+    displayEl.focus();
+    // Keep the caret at the end of the restored expression so the user can
+    // continue editing in place.
+    if (displayEl.setSelectionRange) {
+      displayEl.setSelectionRange(displayEl.value.length, displayEl.value.length);
+    }
+  }
+
+  function initHistoryHandlers() {
+    if (!historyEl) return;
+    historyEl.addEventListener('click', (event) => {
+      const row = event.target.closest ? event.target.closest('.history-entry') : null;
+      if (!row) return;
+      const entry = historyEntries[Number(row.dataset.index)];
+      if (entry) restoreHistory(entry);
+    });
+    renderHistory();
   }
 
   /* ---------------------- On-screen button wiring ------------------- */
@@ -345,15 +420,22 @@
     calculate,
     clear,
     undo,
+    addHistory,
+    clearHistory,
+    restoreHistory,
     translateSymbols,
     init: function () {
       bindDisplayInput();
       initButtonHandlers();
       initKeyboard();
+      initHistoryHandlers();
       syncDisplay();
     },
     get display() {
       return displayStr;
+    },
+    get history() {
+      return historyEntries.slice();
     }
   };
 })(typeof window !== 'undefined' ? window : globalThis);
