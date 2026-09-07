@@ -337,4 +337,208 @@ describe('Calculator via jsdom DOM', () => {
       expect(app.display()).toBe('55');
     });
   });
+
+  describe('Factorize (a×b button)', () => {
+    it('144 → 2^4×3^2, then = re-evaluates to 144', () => {
+      for (const lbl of ['1', '4', '4']) app.clickButton(lbl);
+      app.clickButton('a×b');
+      expect(app.display()).toBe('2^4×3^2');
+      app.clickButton('=');
+      expect(app.display()).toBe('144');
+    });
+
+    it('100 → 2^2×5^2', () => {
+      for (const lbl of ['1', '0', '0']) app.clickButton(lbl);
+      app.clickButton('a×b');
+      expect(app.display()).toBe('2^2×5^2');
+    });
+
+    it('7 (prime) → stays 7', () => {
+      app.clickButton('7');
+      app.clickButton('a×b');
+      expect(app.display()).toBe('7');
+    });
+
+    it('-144 → -2^4×3^2', () => {
+      for (const lbl of ['-', '1', '4', '4']) app.clickButton(lbl);
+      app.clickButton('a×b');
+      expect(app.display()).toBe('-2^4×3^2');
+    });
+
+    it('single-digit number → no change', () => {
+      app.clickButton('5');
+      app.clickButton('a×b');
+      expect(app.display()).toBe('5');
+    });
+  });
+
+  describe('Superscript entry (↑n)', () => {
+    it('2 ↑n 3 = 8', () => {
+      for (const lbl of ['2', '↑n', '3', '=']) app.clickButton(lbl);
+      expect(app.display()).toBe('8');
+    });
+
+    it('2 ↑n 3 + 1 = 9 (operator continues)', () => {
+      for (const lbl of ['2', '↑n', '3', '+', '1', '=']) app.clickButton(lbl);
+      expect(app.display()).toBe('9');
+    });
+
+    it('10 ↑n 2 = 100', () => {
+      for (const lbl of ['1', '0', '↑n', '2', '=']) app.clickButton(lbl);
+      expect(app.display()).toBe('100');
+    });
+
+    it('double ↑n cancels (digits remain normal)', () => {
+      for (const lbl of ['2', '↑n', '↑n', '3', '=']) app.clickButton(lbl);
+      expect(app.display()).toBe('23');
+    });
+  });
+
+  describe('Subscript entry (↓n)', () => {
+    it('75 ↓n 8 = 61 (base-8)', () => {
+      for (const lbl of ['7', '5', '↓n', '8', '=']) app.clickButton(lbl);
+      expect(app.display()).toBe('61');
+    });
+
+    it('binary 1001011 ↓n 2 = 75', () => {
+      for (const lbl of ['1', '0', '0', '1', '0', '1', '1', '↓n', '2', '=']) app.clickButton(lbl);
+      expect(app.display()).toBe('75');
+    });
+
+    it('invalid digit → Error', () => {
+      for (const lbl of ['9', '↓n', '8', '=']) app.clickButton(lbl);
+      expect(app.display()).toBe('Error');
+    });
+  });
+
+  describe('Superscript/subscript via translateSymbols', () => {
+    it('2³ → 8', () => {
+      const res = app.Calculator.evaluate('2³');
+      expect(res.ok).toBe(true);
+      expect(res.value).toBe(8);
+    });
+
+    it('75₈ → 61', () => {
+      const res = app.Calculator.evaluate('75₈');
+      expect(res.ok).toBe(true);
+      expect(res.value).toBe(61);
+    });
+
+    it('10² → 100', () => {
+      const res = app.Calculator.evaluate('10²');
+      expect(res.ok).toBe(true);
+      expect(res.value).toBe(100);
+    });
+
+    it('τ → tau constant', () => {
+      const res = app.Calculator.evaluate('τ/2');
+      expect(res.ok).toBe(true);
+      expect(res.value).toBeCloseTo(Math.PI, 9);
+    });
+
+    it('φ → phi constant', () => {
+      const res = app.Calculator.evaluate('φ');
+      expect(res.ok).toBe(true);
+      expect(res.value).toBeCloseTo((1 + Math.sqrt(5)) / 2, 9);
+    });
+  });
+
+  describe('f(x) button and user-defined functions via UI', () => {
+    it('f(x) inserts template', () => {
+      app.clickButton('f(x)');
+      expect(app.display()).toBe('func(x)=');
+    });
+
+    it('define and call sq()', () => {
+      app.clickButton('f(x)');
+      app.type('sq(x)=x*x');
+      app.clickButton('=');
+      expect(app.display()).toBe('function sq(x) defined');
+      app.type('sq(5)');
+      app.clickButton('=');
+      expect(app.display()).toBe('25');
+    });
+
+    it('define multi-arg with ;', () => {
+      app.type('foo(a;b)=a*b');
+      app.clickButton('=');
+      expect(app.display()).toBe('function foo(a;b) defined');
+      app.type('foo(3;4)');
+      app.clickButton('=');
+      expect(app.display()).toBe('12');
+    });
+
+    it('define and chain functions', () => {
+      app.type('sq(x)=x*x');
+      app.clickButton('=');
+      app.type('sq(sq(2))');
+      app.clickButton('=');
+      expect(app.display()).toBe('16');
+    });
+  });
+
+  describe('Variables via UI', () => {
+    it('assign x and read it', () => {
+      app.type('x=5');
+      app.clickButton('=');
+      expect(app.display()).toBe('5');
+      app.type('x+1');
+      app.clickButton('=');
+      expect(app.display()).toBe('6');
+    });
+
+    it('_ tracks last numeric result', () => {
+      app.type('2+3');
+      app.clickButton('=');
+      expect(app.display()).toBe('5');
+      app.type('_×2');
+      app.clickButton('=');
+      expect(app.display()).toBe('10');
+    });
+
+    it('reassigning constant → Error', () => {
+      app.type('pi=3');
+      app.clickButton('=');
+      expect(app.display()).toBe('Error');
+    });
+  });
+
+  describe('Physics constants via UI', () => {
+    it('tau/2 = π', () => {
+      app.type('tau/2');
+      app.clickButton('=');
+      expect(Number(app.display())).toBeCloseTo(Math.PI, 9);
+    });
+
+    it('c = 299792458', () => {
+      app.type('c');
+      app.clickButton('=');
+      expect(app.display()).toBe('299792458');
+    });
+
+    it('phi = golden ratio', () => {
+      app.type('phi');
+      app.clickButton('=');
+      expect(Number(app.display())).toBeCloseTo((1 + Math.sqrt(5)) / 2, 9);
+    });
+
+    it('h = Planck constant', () => {
+      app.type('h');
+      app.clickButton('=');
+      expect(app.display()).toMatch(/^6\.626070150+e-34$/);
+    });
+  });
+
+  describe('; button', () => {
+    it('click inserts ; separator', () => {
+      app.clickButton(';');
+      expect(app.display()).toBe(';');
+    });
+
+    it('works for min() with ; args', () => {
+      app.type('min(3;1;2)');
+      app.clickButton('=');
+      expect(app.display()).toBe('1');
+    });
+  });
 });
