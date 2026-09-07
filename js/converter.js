@@ -1632,7 +1632,7 @@ const conversionTable = {
     // switches to currency
     refreshCurrencyCache();
 
-    setQuantity(quantitySelector ? quantitySelector.value : 'angle');
+    setQuantity(quantitySelector.value);
   }
 
   global.Converter = {
