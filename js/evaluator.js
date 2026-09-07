@@ -805,7 +805,7 @@
       // element grouping still binds looser (e.g. -2pi -> (-2)pi in outer loop,
       // and -2*3 -> (-2)*3).
       const op = this.next().text;
-      const operand = this.parseExpression(op === '-' ? UNARY_PREC : UNARY_PREC);
+      const operand = this.parseExpression(UNARY_PREC);
       left = new Unary(op, operand);
     } else {
       left = this.parsePostfix(this.parsePrimary());
