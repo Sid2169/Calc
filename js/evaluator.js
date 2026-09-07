@@ -248,10 +248,6 @@
       const A = Complex.toC(a), B = Complex.toC(b);
       if (A.im !== 0 || B.im !== 0) throw new EvaluateError('mod is not defined for complex numbers');
       return A.re % B.re;
-    },
-    eq(a, b) {
-      const A = Complex.toC(a), B = Complex.toC(b);
-      return A.re === B.re && A.im === B.im;
     }
   };
 
