@@ -398,11 +398,6 @@
     renderHistory();
   }
 
-  function clearHistory() {
-    historyEntries = [];
-    renderHistory();
-  }
-
   // Load a past expression back into the display for editing/re-running.
   function restoreHistory(entry) {
     displayStr = entry.expr;
@@ -525,7 +520,6 @@
     clear,
     undo,
     addHistory,
-    clearHistory,
     restoreHistory,
     translateSymbols,
     init: function () {
