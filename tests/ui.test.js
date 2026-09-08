@@ -24,12 +24,13 @@ describe('DOM/UI integrity', () => {
     expect(typeof app.window.Calculator).toBe('object');
   });
 
-  it('loads the four scripts in order: evaluator, converter, calculator, app', () => {
+  it('loads the scripts in order: evaluator, converter, calculator, keypad, app', () => {
     const srcs = [...INDEX_HTML.matchAll(/ src="(js\/[^"]+)"/g)].map((m) => m[1]);
     expect(srcs).toEqual([
       'js/evaluator.js',
       'js/converter.js',
       'js/calculator.js',
+      'js/keypad.js',
       'js/app.js',
     ]);
   });

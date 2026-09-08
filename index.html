@@ -480,9 +480,16 @@
                     </div>
                 </div>
 
+                <!-- Keypad part toggle (narrow windows): switches between the
+                     basic and advanced keypad parts when only one fits on screen. -->
+
+                <button id="keypadToggle" class="keypad-toggle tool-tip tip-below"
+                    data-tooltip="Switch Keypad" type="button" aria-label="Switch keypad part">›</button>
+
                 <!-- Keypad for advanced options -->
 
                 <div class="keypad advanced-keypad">
+                    <div class="keypad-track">
                     <div class="basic-buttons">
                         <button id="clear-btn" class="tool-tip tip-below" data-tooltip="Clear Display">C</button>
                         <button class="tool-tip tip-below" data-tooltip="Start Group">(</button>
@@ -544,16 +551,18 @@
                         <button class="tool-tip tip-above" data-tooltip="Complex Argument">Arg</button>
                         <button class="tool-tip tip-above" data-tooltip="Argument Separator">;</button>
                     </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Link external js -->
-    <script src="js/evaluator.js"></script>
-    <script src="js/converter.js"></script>
-    <script src="js/calculator.js"></script>
-    <script src="js/app.js"></script>
+<script src="js/evaluator.js"></script>
+   <script src="js/converter.js"></script>
+   <script src="js/calculator.js"></script>
+   <script src="js/keypad.js"></script>
+   <script src="js/app.js"></script>
 </body>
 
 </html>

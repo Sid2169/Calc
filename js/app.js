@@ -26,6 +26,7 @@
   const modeSelector = document.getElementById('modeSelector');
   const advancedButtons = document.querySelector('.advanced-buttons');
   const basicButtons = document.querySelector('.basic-buttons');
+  const KeypadState = window.KeypadState;
 
   function applyMode(mode) {
     switch (mode) {
@@ -45,8 +46,14 @@
       default:
         break;
     }
+    if (KeypadState) {
+      KeypadState.applyMode(mode);
+    }
   }
 
+  if (KeypadState) {
+    KeypadState.init();
+  }
   applyMode(modeSelector.value);
   modeSelector.addEventListener('change', () => {
     applyMode(modeSelector.value);

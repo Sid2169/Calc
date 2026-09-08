@@ -289,6 +289,57 @@ body {
   flex-shrink: 1;
 }
 
+/* On wide windows the keypad track is transparent so the two parts keep the
+   existing side-by-side flex layout. */
+.keypad-track {
+  display: contents;
+}
+
+/* Keypad part toggle: only visible when the two parts collapse into one
+   (narrow windows, advanced mode). */
+.keypad-toggle {
+  display: none;
+  align-self: flex-start;
+  margin: 0 0 4px auto;
+  padding: 6px 12px;
+  font-size: 1.1rem;
+  line-height: 1;
+  background-color: #3d3d3d;
+}
+
+/* When the window is too narrow for both keypad parts to sit side by side,
+   only the selected part takes the whole width; the other hides and the
+   toggle button switches between them (GNOME-Calculator style).
+
+   JS adds .keypad-collapsed to both the keypad and the toggle button (advanced
+   mode + narrow viewport) and toggles .show-advanced to pick which part is
+   active. */
+.keypad-collapsed.keypad-toggle {
+  display: block;
+}
+
+.keypad-collapsed {
+  position: relative;
+  overflow: hidden;
+  justify-content: flex-start;
+}
+
+.keypad-collapsed .keypad-track {
+  display: flex;
+  width: 200%;
+  transition: transform 0.25s ease;
+}
+
+.keypad-collapsed .basic-buttons,
+.keypad-collapsed .advanced-buttons {
+  width: 50%;
+  flex: 0 0 50%;
+}
+
+.keypad-collapsed.show-advanced .keypad-track {
+  transform: translateX(-50%);
+}
+
 
 /* ---- BUTTONS ---- */
 button,
