@@ -18,6 +18,8 @@
     throw new Error('app.js requires calculator.js to be loaded first');
   }
 
+  const Settings = window.Settings;
+  const preferences = Settings ? Settings.get() : {};
   const Converter = window.Converter;
   if (Converter) {
     Converter.init();
@@ -29,6 +31,14 @@
   const advancedKeypad = document.getElementById('advancedKeypad');
   const keypadViewToggles = document.querySelectorAll('.keypad-view-toggle');
   let touchStart = null;
+
+  function selectHasValue(select, value) {
+    return [...select.options].some((option) => option.value === value);
+  }
+
+  if (selectHasValue(modeSelector, preferences.mode)) {
+    modeSelector.value = preferences.mode;
+  }
 
   function setKeypadView(view) {
     const nextView = view === 'advanced' ? 'advanced' : 'basic';
@@ -77,6 +87,7 @@
   applyMode(modeSelector.value);
   modeSelector.addEventListener('change', () => {
     applyMode(modeSelector.value);
+    if (Settings) Settings.setMode(modeSelector.value);
   });
 
   keypadViewToggles.forEach((button) => {

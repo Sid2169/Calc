@@ -1,9 +1,9 @@
 /**
  * Shared test bootstrap.
  *
- * Loads the real index.html into jsdom and then executes the four app
- * scripts in the same order the browser does, reproducing the page's boot
- * sequence (app.js calls Calculator.init() and Converter.init() itself).
+ * Loads the real index.html into jsdom and then executes the application
+ * scripts in browser order, reproducing the page's boot sequence (app.js
+ * calls Calculator.init() and Converter.init() itself).
  *
  * The bootstrap returns a handle with helpers for driving the calculator
  * exactly like a user does (clicking on-screen buttons, pressing keys,
@@ -22,7 +22,13 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
-const SCRIPT_ORDER = ['js/evaluator.js', 'js/converter.js', 'js/calculator.js', 'js/app.js'];
+const SCRIPT_ORDER = [
+  'js/settings.js',
+  'js/evaluator.js',
+  'js/converter.js',
+  'js/calculator.js',
+  'js/app.js',
+];
 
 export function buildDom() {
   const html = readFileSync(resolve(ROOT, 'index.html'), 'utf8');

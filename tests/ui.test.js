@@ -15,18 +15,21 @@ describe('DOM/UI integrity', () => {
   });
 
   it('exposes all app globals on window', () => {
+    expect(app.window.Settings).toBeDefined();
     expect(app.window.Evaluator).toBeDefined();
     expect(app.window.Converter).toBeDefined();
     expect(app.window.Calculator).toBeDefined();
 
+    expect(typeof app.window.Settings).toBe('object');
     expect(typeof app.window.Evaluator).toBe('object');
     expect(typeof app.window.Converter).toBe('object');
     expect(typeof app.window.Calculator).toBe('object');
   });
 
-  it('loads the four scripts in order: evaluator, converter, calculator, app', () => {
+  it('loads settings before the calculator application scripts', () => {
     const srcs = [...INDEX_HTML.matchAll(/ src="(js\/[^"]+)"/g)].map((m) => m[1]);
     expect(srcs).toEqual([
+      'js/settings.js',
       'js/evaluator.js',
       'js/converter.js',
       'js/calculator.js',
