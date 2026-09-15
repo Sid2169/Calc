@@ -34,6 +34,7 @@ describe('DOM/UI integrity', () => {
       'js/converter.js',
       'js/calculator.js',
       'js/app.js',
+      'js/pwa.js',
     ]);
   });
 

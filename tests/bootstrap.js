@@ -28,6 +28,7 @@ const SCRIPT_ORDER = [
   'js/converter.js',
   'js/calculator.js',
   'js/app.js',
+  'js/pwa.js',
 ];
 
 export function buildDom() {
