@@ -13,7 +13,7 @@
  *   - calculate():       evaluate current display and write back the result
  *   - clear():           reset the display
  *   - undo():            remove the last token/character
- *   - init():            bind all button + keyboard handlers
+ *   - init():            bind keypad button + keyboard handlers
  */
 
 (function (global) {
@@ -461,7 +461,7 @@
   };
 
   function initButtonHandlers() {
-    document.querySelectorAll('button').forEach((btn) => {
+    document.querySelectorAll('.advanced-keypad button').forEach((btn) => {
       const label = btn.textContent.trim();
       if (!label) return;
 

@@ -17,6 +17,22 @@ function advancedHidden() {
   return app.document.querySelector('.advanced-buttons').classList.contains('panel-hidden');
 }
 
+function swipeKeypad(fromX, fromY, toX, toY) {
+  const keypad = app.document.getElementById('advancedKeypad');
+  const start = new app.window.Event('touchstart', { bubbles: true });
+  const end = new app.window.Event('touchend', { bubbles: true });
+
+  Object.defineProperty(start, 'touches', {
+    value: [{ clientX: fromX, clientY: fromY }],
+  });
+  Object.defineProperty(end, 'changedTouches', {
+    value: [{ clientX: toX, clientY: toY }],
+  });
+
+  keypad.dispatchEvent(start);
+  keypad.dispatchEvent(end);
+}
+
 describe('Mode switching', () => {
   beforeEach(() => {
     app = openApp();
@@ -47,6 +63,44 @@ describe('Mode switching', () => {
     setMode('advanced');
     expect(basicHidden()).toBe(false);
     expect(advancedHidden()).toBe(false);
+  });
+
+  it('the mobile keypad button switches and labels both keypad views', () => {
+    const activeToggle = app.document.querySelector('.converter-active .keypad-view-toggle');
+    const keypad = app.document.getElementById('advancedKeypad');
+
+    expect(keypad.dataset.keypadView).toBe('basic');
+    activeToggle.click();
+    expect(keypad.dataset.keypadView).toBe('advanced');
+    expect(app.display()).toBe('0');
+    expect(activeToggle.getAttribute('aria-label')).toBe('Show number keys');
+    expect(activeToggle.getAttribute('aria-pressed')).toBe('true');
+
+    activeToggle.click();
+    expect(keypad.dataset.keypadView).toBe('basic');
+    expect(app.display()).toBe('0');
+    expect(activeToggle.getAttribute('aria-label')).toBe('Show advanced keys');
+  });
+
+  it('switches keypad views with horizontal swipes in advanced mode', () => {
+    const keypad = app.document.getElementById('advancedKeypad');
+
+    swipeKeypad(160, 40, 80, 45);
+    expect(keypad.dataset.keypadView).toBe('advanced');
+
+    swipeKeypad(80, 40, 160, 45);
+    expect(keypad.dataset.keypadView).toBe('basic');
+  });
+
+  it('ignores vertical gestures and keypad swipes outside advanced mode', () => {
+    const keypad = app.document.getElementById('advancedKeypad');
+
+    swipeKeypad(160, 40, 120, 130);
+    expect(keypad.dataset.keypadView).toBe('basic');
+
+    setMode('basic');
+    swipeKeypad(160, 40, 80, 45);
+    expect(keypad.dataset.keypadView).toBe('basic');
   });
 
   it('keeps an active converter container visible in every mode', () => {
