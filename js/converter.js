@@ -19,6 +19,7 @@
 
   const displayEl = document.getElementById('displayText');
   const quantitySelector = document.getElementById('quantitySelector');
+  const Settings = global.Settings;
 
   let selectedQuantity = quantitySelector ? quantitySelector.value : 'angle';
 
@@ -1544,6 +1545,44 @@ const conversionTable = {
     return document.querySelector('.converter-active');
   }
 
+  function selectHasValue(select, value) {
+    return [...select.options].some((option) => option.value === value);
+  }
+
+  function quantityForContainer(container) {
+    const option = [...quantitySelector.options].find((item) => container.classList.contains(item.value));
+    return option ? option.value : null;
+  }
+
+  function saveContainerUnits(container) {
+    if (!Settings) return;
+    const quantity = quantityForContainer(container);
+    const fromEl = container.querySelector('.from-unit');
+    const toEl = container.querySelector('.to-unit');
+    if (quantity && fromEl && toEl) Settings.setUnits(quantity, fromEl.value, toEl.value);
+  }
+
+  function restorePreferences() {
+    if (!Settings) return;
+    const preferences = Settings.get();
+
+    if (selectHasValue(quantitySelector, preferences.quantity)) {
+      quantitySelector.value = preferences.quantity;
+    }
+    selectedQuantity = quantitySelector.value;
+
+    document.querySelectorAll('.converter-container').forEach((container) => {
+      const quantity = quantityForContainer(container);
+      const savedUnits = quantity && preferences.units[quantity];
+      if (!savedUnits) return;
+
+      const fromEl = container.querySelector('.from-unit');
+      const toEl = container.querySelector('.to-unit');
+      if (selectHasValue(fromEl, savedUnits.from)) fromEl.value = savedUnits.from;
+      if (selectHasValue(toEl, savedUnits.to)) toEl.value = savedUnits.to;
+    });
+  }
+
   function displayValue() {
     const raw = (displayEl.value || '').trim();
     if (raw === '' || raw === '0') return 0;
@@ -1600,16 +1639,21 @@ const conversionTable = {
 
   function init() {
     if (!quantitySelector) return;
+    restorePreferences();
 
     // quantity selector
     quantitySelector.addEventListener('change', () => {
       setQuantity(quantitySelector.value);
+      if (Settings) Settings.setQuantity(quantitySelector.value);
     });
 
     // per-container unit selects
     document.querySelectorAll('.converter-container').forEach((container) => {
       container.querySelectorAll('.from-unit, .to-unit').forEach((el) => {
-        el.addEventListener('change', convert);
+        el.addEventListener('change', () => {
+          saveContainerUnits(container);
+          convert();
+        });
       });
       const switchBtn = container.querySelector('.switch-btn');
       if (switchBtn) {
@@ -1619,6 +1663,7 @@ const conversionTable = {
           const temp = fromEl.value;
           fromEl.value = toEl.value;
           toEl.value = temp;
+          saveContainerUnits(container);
           convert();
         });
       }
