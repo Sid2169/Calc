@@ -47,7 +47,7 @@ export function loadScripts(window) {
   }
 }
 
-export function openApp(fetchFn) {
+export function openApp(fetchFn, initialStorage = {}) {
   const dom = buildDom();
   const { window } = dom;
   const { document } = window;
@@ -56,6 +56,10 @@ export function openApp(fetchFn) {
   // Converter.init() fires a currency refresh immediately). jsdom has no
   // native fetch, so default to a resolvable stub; tests may inject their own.
   window.fetch = fetchFn || defaultFetch();
+
+  Object.entries(initialStorage).forEach(([key, value]) => {
+    window.localStorage.setItem(key, value);
+  });
 
   loadScripts(window);
 

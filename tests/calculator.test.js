@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { openApp } from './bootstrap.js';
 
 let app;
+const HISTORY_STORAGE_KEY = 'gnome-calculator.history.v1';
 
 function clickHistory(index) {
   const rows = app.document.querySelectorAll('.history-entry');
@@ -270,6 +271,59 @@ describe('Calculator via jsdom DOM', () => {
       }
       expect(app.Calculator.history.length).toBe(200);
       expect(app.document.querySelectorAll('.history-entry').length).toBe(200);
+    });
+
+    it('saves completed calculations to persistent browser storage', () => {
+      app.clickButton('2');
+      app.clickButton('+');
+      app.clickButton('3');
+      app.clickButton('=');
+
+      expect(JSON.parse(app.window.localStorage.getItem(HISTORY_STORAGE_KEY))).toEqual([
+        { expr: '2+3', result: '5' },
+      ]);
+    });
+
+    it('restores valid saved history when the app starts', () => {
+      app = openApp(undefined, {
+        [HISTORY_STORAGE_KEY]: JSON.stringify([
+          { expr: '4×5', result: '20' },
+          { expr: '10÷2', result: '5' },
+        ]),
+      });
+
+      expect(app.Calculator.history).toEqual([
+        { expr: '4×5', result: '20' },
+        { expr: '10÷2', result: '5' },
+      ]);
+      expect(app.history()).toEqual([
+        { expr: '4×5', value: '= 20' },
+        { expr: '10÷2', value: '= 5' },
+      ]);
+    });
+
+    it('ignores malformed saved history without preventing startup', () => {
+      expect(() => {
+        app = openApp(undefined, { [HISTORY_STORAGE_KEY]: '{invalid json' });
+      }).not.toThrow();
+      expect(app.Calculator.history).toEqual([]);
+    });
+
+    it('clears both visible and persistent history without changing the display', () => {
+      app.clickButton('2');
+      app.clickButton('+');
+      app.clickButton('3');
+      app.clickButton('=');
+
+      const clearButton = app.document.getElementById('clearHistoryButton');
+      expect(clearButton.closest('.history-toolbar').hidden).toBe(false);
+      clearButton.click();
+
+      expect(app.Calculator.history).toEqual([]);
+      expect(app.history()).toEqual([]);
+      expect(app.window.localStorage.getItem(HISTORY_STORAGE_KEY)).toBeNull();
+      expect(clearButton.closest('.history-toolbar').hidden).toBe(true);
+      expect(app.display()).toBe('5');
     });
   });
 

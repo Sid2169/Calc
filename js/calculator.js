@@ -362,8 +362,37 @@
   // every completed calculation (expression = result), newest at the bottom,
   // GNOME-Calculator style. Clicking an entry restores its expression.
   const historyEl = document.getElementById('historyArea');
+  const historyToolbarEl = document.getElementById('historyToolbar');
+  const clearHistoryButton = document.getElementById('clearHistoryButton');
   const HISTORY_MAX = 200; // cap the session list to keep the DOM light
+  const HISTORY_STORAGE_KEY = 'gnome-calculator.history.v1';
   let historyEntries = [];
+
+  function loadHistory() {
+    try {
+      const stored = global.localStorage && global.localStorage.getItem(HISTORY_STORAGE_KEY);
+      if (!stored) return [];
+
+      const parsed = JSON.parse(stored);
+      if (!Array.isArray(parsed)) return [];
+
+      return parsed
+        .filter((entry) => entry && typeof entry.expr === 'string' && typeof entry.result === 'string')
+        .slice(-HISTORY_MAX);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function saveHistory() {
+    try {
+      if (global.localStorage) {
+        global.localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(historyEntries));
+      }
+    } catch (error) {
+      // Storage can be unavailable in private or restricted browsing modes.
+    }
+  }
 
   function renderHistory() {
     if (!historyEl) return;
@@ -386,14 +415,26 @@
       historyEl.appendChild(row);
     });
     historyEl.classList.toggle('empty', historyEntries.length === 0);
+    if (historyToolbarEl) historyToolbarEl.hidden = historyEntries.length === 0;
     // Keep the newest entry visible when the list overflows.
     historyEl.scrollTop = historyEl.scrollHeight;
   }
 
   function addHistory(expr, result) {
-    historyEntries.push({ expr, result });
+    historyEntries.push({ expr: String(expr), result: String(result) });
     if (historyEntries.length > HISTORY_MAX) {
       historyEntries.shift();
+    }
+    saveHistory();
+    renderHistory();
+  }
+
+  function clearHistory() {
+    historyEntries = [];
+    try {
+      if (global.localStorage) global.localStorage.removeItem(HISTORY_STORAGE_KEY);
+    } catch (error) {
+      // Keep clearing the in-memory history when storage is unavailable.
     }
     renderHistory();
   }
@@ -413,12 +454,14 @@
 
   function initHistoryHandlers() {
     if (!historyEl) return;
+    historyEntries = loadHistory();
     historyEl.addEventListener('click', (event) => {
       const row = event.target.closest ? event.target.closest('.history-entry') : null;
       if (!row) return;
       const entry = historyEntries[Number(row.dataset.index)];
       if (entry) restoreHistory(entry);
     });
+    if (clearHistoryButton) clearHistoryButton.addEventListener('click', clearHistory);
     renderHistory();
   }
 
@@ -520,6 +563,7 @@
     clear,
     undo,
     addHistory,
+    clearHistory,
     restoreHistory,
     translateSymbols,
     init: function () {
